@@ -31,10 +31,15 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 .track{height:300px;border:1px solid #646a68;background:#111516;position:relative;overflow:visible}
 .track:before,.track:after{content:"";position:absolute;left:0;right:0;height:1px;background:#2c3130}
 .track:before{top:33.33%}.track:after{top:66.66%}
+.track .slot-line{position:absolute;left:8px;right:8px;height:1px;background:#555b59;opacity:.55}
 .ticks{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:0 6px;pointer-events:none}
 .tick{height:1px;background:#4a504e;opacity:.65}
-.security-zone{position:absolute;left:0;right:0;height:42px;border-top:2px solid #f0f2f1;border-bottom:2px solid #f0f2f1;background:#dfe2e1;opacity:.9}
-.security-zone span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#111;font-size:8px;font-weight:700;letter-spacing:.5px}
+.security-zone{position:absolute;left:2px;right:2px;height:48px;border:2px solid #f4f5f4;background:#dfe2e1;color:#080909;z-index:1;pointer-events:none}
+.security-zone:before{content:"";position:absolute;left:-7px;top:50%;width:7px;height:2px;background:#f4f5f4}
+.security-zone:after{content:"";position:absolute;right:-7px;top:50%;width:7px;height:2px;background:#f4f5f4}
+.security-zone span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#080909;font-size:9px;font-weight:900;letter-spacing:1px}
+.slider.on-target{background:#ffffff!important;border-color:#ffffff!important;box-shadow:0 0 0 3px #080909,0 0 0 5px #ffffff;z-index:5}
+.slider.on-target:before{content:"✓";position:absolute;right:-24px;top:50%;transform:translateY(-50%);color:#fff;font:bold 15px Arial}
 .slider{position:absolute;left:50%;width:72px;height:38px;transform:translateX(-50%);border:2px solid #e1e4e3;background:#bfc3c2;box-shadow:0 0 0 1px #111;cursor:pointer;touch-action:none;z-index:4}
 .slider:after{content:"";position:absolute;width:10px;height:10px;left:50%;top:50%;transform:translate(-50%,-50%);background:#080909}
 .slider .grip{position:absolute;left:8px;right:8px;top:7px;height:3px;background:#6a706e;box-shadow:0 8px 0 #6a706e,0 16px 0 #6a706e}
@@ -56,6 +61,8 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 .actions{display:grid;grid-template-columns:1.3fr .9fr .9fr;gap:8px;margin-top:12px}
 .actions button{min-height:46px;border:1px solid #707674;background:#111415;color:#e8ebea;letter-spacing:1px;font-weight:800}
 .actions button:active{background:#252928}
+.actions button:disabled{opacity:.38;cursor:not-allowed}
+.actions button#unlock.ready{opacity:1;border-color:#f0f2f1;box-shadow:0 0 0 1px #f0f2f1}
 .warning{margin-top:12px;border:1px solid #444a48;padding:9px;font-size:10px;line-height:1.55;color:#a8aeac}
 .message{margin-top:10px;min-height:25px;font-size:11px;line-height:1.5;color:#c0c6c4}
 .overlay{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
@@ -83,9 +90,9 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
   </div>
   <div class="subtitle">МЕХАНИЧЕСКИЙ ВЗЛОМ</div>
   <div class="instruction">
-    Поверните каждый цилиндр. <b>Белая зона — рабочее положение.</b>
-    Некоторые цилиндры связаны общим приводом и двигаются вместе.
-    После выравнивания нажмите «РАЗБЛОКИРОВАТЬ».
+    Сдвигайте ползунки по вертикальным направляющим. <b>Белая рамка WORK / SET HERE — точная рабочая позиция.</b>
+    Когда ползунок установлен правильно, он получает отметку ✓. Связанные цилиндры двигаются вместе.
+    Кнопка «РАЗБЛОКИРОВАТЬ» станет активной только после правильного положения всех четырёх.
   </div>
 
   <div class="status">
@@ -107,8 +114,8 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 
       <div class="sliders" id="sliders">
         <div class="slider-wrap">
-          <div class="track" data-track="1">
-            <div class="security-zone" data-work="2"><span>WORK</span></div>
+          <div class="track" data-track="1"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
+            <div class="security-zone" data-work="2"><span>WORK / SET HERE</span></div>
             <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
             <div class="slider" data-id="1"><div class="grip"></div></div>
           </div>
@@ -116,8 +123,8 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
         </div>
 
         <div class="slider-wrap">
-          <div class="track" data-track="2">
-            <div class="security-zone" data-work="1"><span>WORK</span></div>
+          <div class="track" data-track="2"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
+            <div class="security-zone" data-work="1"><span>WORK / SET HERE</span></div>
             <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
             <div class="slider" data-id="2"><div class="grip"></div></div>
           </div>
@@ -125,8 +132,8 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
         </div>
 
         <div class="slider-wrap">
-          <div class="track" data-track="3">
-            <div class="security-zone" data-work="3"><span>WORK</span></div>
+          <div class="track" data-track="3"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
+            <div class="security-zone" data-work="3"><span>WORK / SET HERE</span></div>
             <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
             <div class="slider" data-id="3"><div class="grip"></div></div>
           </div>
@@ -134,8 +141,8 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
         </div>
 
         <div class="slider-wrap">
-          <div class="track" data-track="4">
-            <div class="security-zone" data-work="2"><span>WORK</span></div>
+          <div class="track" data-track="4"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
+            <div class="security-zone" data-work="2"><span>WORK / SET HERE</span></div>
             <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
             <div class="slider" data-id="4"><div class="grip"></div></div>
           </div>
@@ -159,7 +166,7 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
     <div class="message" id="message">Нажимайте на ползунок или по дорожке, чтобы сместить цилиндр на один сектор. Связанные элементы сдвинутся автоматически.</div>
 
     <div class="actions">
-      <button id="unlock">РАЗБЛОКИРОВАТЬ</button>
+      <button id="unlock" disabled>РАЗБЛОКИРОВАТЬ</button>
       <button id="reset">СБРОС</button>
       <button id="diagnostic">ДИАГНОСТИКА</button>
     </div>
@@ -209,9 +216,9 @@ function positionWorkZones(){
     const trackH=track.clientHeight;
     const sliderH=slider.offsetHeight;
     const travel=Math.max(1,trackH-sliderH-4);
-    const center=(work/(N-1))*travel+2+sliderH/2;
-    const zoneH=zone.offsetHeight;
-    zone.style.top=(center-zoneH/2)+'px';
+    const sliderTop=(work/(N-1))*travel+2;
+    const sliderCenter=sliderTop+sliderH/2;
+    zone.style.top=(sliderCenter-zone.offsetHeight/2)+'px';
   });
 }
 
@@ -224,12 +231,16 @@ function render(){
     const y=(state.pos[i]/(N-1))*travel+2;
     sliderEls[i].style.top=y+'px';
     document.getElementById('pos'+(i+1)).textContent='POS '+String(state.pos[i]).padStart(2,'0');
-    sliderEls[i].style.borderColor=state.pos[i]===target[i]?'#ffffff':'#e1e4e3';
-    sliderEls[i].style.background=state.pos[i]===target[i]?'#e6e9e8':'#bfc3c2';
+    const hit=state.pos[i]===target[i];
+    sliderEls[i].classList.toggle('on-target',hit);
+    sliderEls[i].setAttribute('aria-label',hit?'CYLINDER '+(i+1)+' — РАБОЧАЯ ЗОНА':'CYLINDER '+(i+1)+' — ПОЗИЦИЯ '+state.pos[i]);
   }
   document.getElementById('moveCount').textContent='ДЕЙСТВИЙ: '+state.moves;
   const aligned=state.pos.filter((v,i)=>v===target[i]).length;
   document.getElementById('aligned').textContent=aligned+' / 4';
+  const unlock=document.getElementById('unlock');
+  unlock.disabled=aligned!==4;
+  unlock.classList.toggle('ready',aligned===4);
   const linked=state.pos[0]!==state.pos[1] || state.pos[1]!==state.pos[2] ? 'ПРИВОДЫ: СВЯЗАНЫ' : 'ПРИВОДЫ: СВЯЗАНЫ';
   document.getElementById('linkState').textContent=linked+' / C4 НЕЗАВИСИМ';
 }
@@ -243,7 +254,7 @@ function step(id){
   const aligned=state.pos.filter((v,i)=>v===target[i]).length;
   document.getElementById('message').textContent='МЕХАНИЗМ: CYL-0'+id+' активирован. '+aligned+'/4 цилиндра в рабочей зоне.';
   if(aligned===4){
-    document.getElementById('message').textContent='ВСЕ ЦИЛИНДРЫ В РАБОЧЕЙ ЗОНЕ. Нажмите «РАЗБЛОКИРОВАТЬ».';
+    document.getElementById('message').textContent='✓ ВСЕ 4 ЦИЛИНДРА В ЗОНЕ WORK. РАЗБЛОКИРОВАТЬ ДОСТУПНО.';
   }
 }
 
