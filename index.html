@@ -108,7 +108,7 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
       <div class="sliders" id="sliders">
         <div class="slider-wrap">
           <div class="track" data-track="1">
-            <div class="security-zone" style="top:40%"><span>WORK</span></div>
+            <div class="security-zone" data-work="2"><span>WORK</span></div>
             <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
             <div class="slider" data-id="1"><div class="grip"></div></div>
           </div>
@@ -117,7 +117,7 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 
         <div class="slider-wrap">
           <div class="track" data-track="2">
-            <div class="security-zone" style="top:23%"><span>WORK</span></div>
+            <div class="security-zone" data-work="1"><span>WORK</span></div>
             <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
             <div class="slider" data-id="2"><div class="grip"></div></div>
           </div>
@@ -126,7 +126,7 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 
         <div class="slider-wrap">
           <div class="track" data-track="3">
-            <div class="security-zone" style="top:57%"><span>WORK</span></div>
+            <div class="security-zone" data-work="3"><span>WORK</span></div>
             <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
             <div class="slider" data-id="3"><div class="grip"></div></div>
           </div>
@@ -135,7 +135,7 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 
         <div class="slider-wrap">
           <div class="track" data-track="4">
-            <div class="security-zone" style="top:33%"><span>WORK</span></div>
+            <div class="security-zone" data-work="2"><span>WORK</span></div>
             <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
             <div class="slider" data-id="4"><div class="grip"></div></div>
           </div>
@@ -180,7 +180,7 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 const N=6;
 const state={pos:[0,0,0,0],moves:0,errors:4,time:50,finished:false,timer:null};
 
-const target=[4,2,5,2];
+const target=[2,1,3,2];
 
 // Механические связи для первого теста.
 // Клик/шаг CYL-01: C1 +1, C2 -1
@@ -200,7 +200,23 @@ const tracks=[1,2,3,4].map(i=>document.querySelector('.track[data-track="'+i+'"]
 function clamp(v){return ((v%N)+N)%N}
 function setPos(i,v){state.pos[i]=clamp(v)}
 
+function positionWorkZones(){
+  const tracks=document.querySelectorAll('.track');
+  tracks.forEach((track,i)=>{
+    const zone=track.querySelector('.security-zone');
+    const work=Number(zone.dataset.work);
+    const slider=track.querySelector('.slider');
+    const trackH=track.clientHeight;
+    const sliderH=slider.offsetHeight;
+    const travel=Math.max(1,trackH-sliderH-4);
+    const center=(work/(N-1))*travel+2+sliderH/2;
+    const zoneH=zone.offsetHeight;
+    zone.style.top=(center-zoneH/2)+'px';
+  });
+}
+
 function render(){
+  positionWorkZones();
   const trackH=tracks[0].clientHeight;
   const sliderH=sliderEls[0].offsetHeight;
   const travel=Math.max(1,trackH-sliderH-4);
@@ -226,6 +242,9 @@ function step(id){
   render();
   const aligned=state.pos.filter((v,i)=>v===target[i]).length;
   document.getElementById('message').textContent='МЕХАНИЗМ: CYL-0'+id+' активирован. '+aligned+'/4 цилиндра в рабочей зоне.';
+  if(aligned===4){
+    document.getElementById('message').textContent='ВСЕ ЦИЛИНДРЫ В РАБОЧЕЙ ЗОНЕ. Нажмите «РАЗБЛОКИРОВАТЬ».';
+  }
 }
 
 function check(){
