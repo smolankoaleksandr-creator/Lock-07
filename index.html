@@ -3,112 +3,199 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>LOCK//07</title>
+<title>ЗАМОК//07 — версия 3.7</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:#050606;color:#eee;font-family:Courier New,monospace;overflow:hidden}
-body{display:flex;align-items:center;justify-content:center}
-.scan{position:fixed;inset:0;pointer-events:none;opacity:.045;background:repeating-linear-gradient(#fff 0 1px,transparent 1px 5px)}
-.machine{width:min(1000px,96vw);height:min(700px,94vh);background:#0b0d0d;border:1px solid #555;box-shadow:0 0 0 7px #030404,0 25px 80px #000;padding:18px}
-.head{height:62px;border:1px solid #444;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
-.logo{font-size:20px;font-weight:bold;letter-spacing:5px}.sub{font-size:10px;color:#777;letter-spacing:2px}
-.main{height:calc(100% - 80px);margin-top:18px;display:grid;grid-template-columns:1fr 260px;gap:18px}
-.panel{border:1px solid #3f4444;background:#090b0b;position:relative;padding:22px}
-.label{font-size:10px;color:#777;letter-spacing:2px}.title{font-size:19px;letter-spacing:3px;margin:8px 0 18px}
-.instruction{font-size:11px;color:#999;line-height:1.6;border-block:1px solid #292d2d;padding:10px 0}
-.lock{margin:25px auto 20px;width:min(470px,90%);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.tumbler{height:180px;border:1px solid #555;background:#101313;position:relative;overflow:hidden;cursor:pointer}
-.tumbler:hover{border-color:#aaa}.rail{position:absolute;left:50%;top:15px;bottom:15px;width:3px;background:#555;transform:translateX(-50%)}
-.pin{position:absolute;left:50%;width:44px;height:22px;background:#aaa;border:2px solid #eee;transform:translate(-50%,-50%);transition:top .15s}
-.pin:after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;background:#111;transform:translate(-50%,-50%)}
-.target{position:absolute;left:0;right:0;top:38%;height:45px;border-block:1px dashed #777;pointer-events:none}
-.num{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:9px;color:#666}
-.status{text-align:center;font-size:11px;color:#aaa;min-height:17px}
-.buttons{display:flex;gap:8px;justify-content:center;margin-top:14px}
-button{font:inherit;color:#bbb;background:#141717;border:1px solid #505555;padding:10px 18px;cursor:pointer}
-button:hover{color:#fff;border-color:#aaa}button:active{transform:translateY(1px)}
-.side{border:1px solid #3f4444;background:#090b0b;padding:18px}
-h2{font-size:12px;letter-spacing:3px;margin:0 0 18px}.stat{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #252929;font-size:11px}.v{color:#eee}
-.attempts{letter-spacing:4px}.log{margin-top:20px;height:170px;overflow:hidden;font-size:9px;line-height:1.8;color:#666}
-.help{position:absolute;bottom:16px;left:18px;right:18px;font-size:9px;color:#555;line-height:1.5}
-.overlay{position:absolute;inset:0;background:rgba(2,3,3,.96);display:none;align-items:center;justify-content:center;text-align:center;z-index:10}
-.overlay.on{display:flex}.result{border:1px solid #777;padding:35px;min-width:65%}.big{font-size:27px;letter-spacing:5px}.result p{font-size:11px;color:#999}
-@media(max-width:700px){.machine{height:96vh;padding:9px}.head{height:54px}.main{grid-template-columns:1fr}.side{display:none}.panel{padding:14px}.tumbler{height:150px}.lock{margin-top:18px}}
+*{box-sizing:border-box}
+html,body{margin:0;background:#050606;color:#e9ebea;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;display:flex;justify-content:center;padding:14px}
+.app{width:min(860px,100%);border:1px solid #666b69;background:#0a0c0d;padding:16px;box-shadow:0 0 40px #000}
+.header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #555;padding-bottom:12px;margin-bottom:12px;gap:12px}
+.logo{font-size:25px;font-weight:900;letter-spacing:4px}
+.version{font:13px monospace;color:#aeb3b1;text-align:right;line-height:1.5}
+.subtitle{font:12px monospace;color:#aeb3b1;letter-spacing:1px;margin-bottom:14px}
+.instruction{border:1px solid #414644;background:#0d1011;padding:11px 12px;font-size:13px;line-height:1.5;color:#c8cdcb;margin-bottom:14px}
+.status{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr 1fr;gap:7px;margin-bottom:12px}
+.cell{border:1px solid #464b49;padding:8px 7px;font:11px monospace;color:#aeb4b2}
+.cell b{display:block;color:#e5e8e7;font-size:12px;margin-top:4px}
+.panel{border:1px solid #565b59;background:#080a0b;padding:14px}
+.systemline{font:12px monospace;color:#c7ccca;margin-bottom:14px;display:flex;justify-content:space-between}
+.lockboard{position:relative;height:330px;border:1px solid #343938;background:
+linear-gradient(#111516 1px,transparent 1px),
+linear-gradient(90deg,#111516 1px,transparent 1px);
+background-size:32px 32px;overflow:hidden}
+.mech{position:absolute;left:8%;right:8%;top:50%;height:5px;background:#303534;transform:translateY(-50%);box-shadow:0 0 0 1px #151817}
+.coupling{position:absolute;top:50%;width:56px;height:56px;border:3px solid #4d5351;border-radius:50%;transform:translate(-50%,-50%);background:#090b0c}
+.coupling:before,.coupling:after{content:"";position:absolute;left:50%;top:50%;background:#4d5351;transform:translate(-50%,-50%)}
+.coupling:before{width:38px;height:3px}.coupling:after{height:38px;width:3px}
+.c1{left:25%}.c2{left:42%}.c3{left:59%}.c4{left:76%}
+.cylinder{position:absolute;top:50%;width:110px;height:110px;transform:translate(-50%,-50%);border:1px solid #737976;border-radius:50%;background:#0b0e0f;cursor:pointer;touch-action:manipulation;transition:filter .15s}
+.cylinder:active{filter:brightness(1.35)}
+.cylinder.ok{box-shadow:0 0 22px rgba(235,239,237,.45);border-color:#e8ecea}
+.cyl1{left:25%}.cyl2{left:42%}.cyl3{left:59%}.cyl4{left:76%}
+.ring{position:absolute;inset:9px;border:2px solid #555b59;border-radius:50%;transition:transform .18s ease}
+.ring:before{content:"";position:absolute;inset:9px;border:1px dashed #3e4442;border-radius:50%}
+.spoke{position:absolute;left:50%;top:50%;height:43px;width:4px;background:#aeb4b2;transform-origin:50% 0;border-radius:2px}
+.center{position:absolute;left:50%;top:50%;width:18px;height:18px;border-radius:50%;border:2px solid #d7dcda;background:#0a0c0d;transform:translate(-50%,-50%);z-index:3}
+.target{position:absolute;left:50%;top:4px;width:22px;height:10px;background:#f0f2f1;transform:translateX(-50%);z-index:5;box-shadow:0 0 7px #fff}
+.label{position:absolute;left:50%;top:calc(50% + 68px);transform:translateX(-50%);font:11px monospace;color:#c1c6c4;letter-spacing:1px}
+.position{position:absolute;left:50%;bottom:9px;transform:translateX(-50%);font:10px monospace;color:#818885}
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+button{border:1px solid #777c7a;background:#111415;color:#e8ebea;padding:12px 8px;font-weight:800;letter-spacing:1px}
+button:active{background:#242827}
+.danger{border-color:#777}
+.warning{margin-top:12px;border:1px solid #444a48;padding:9px 10px;font:10px monospace;line-height:1.5;color:#aeb4b2}
+.message{min-height:24px;margin-top:10px;font:12px monospace;color:#c1c7c5}
+.overlay{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;padding:20px}
+.modal{width:min(430px,100%);border:1px solid #d8dddb;background:#090b0c;padding:22px;text-align:center}
+.modal h2{letter-spacing:3px;margin:0 0 10px}.modal p{font-size:13px;color:#b9bfbd;line-height:1.5}.modal button{width:100%;margin-top:8px}
+@media(max-width:650px){
+ body{padding:7px}.app{padding:10px}.logo{font-size:21px}.version{font-size:10px}
+ .status{grid-template-columns:1fr 1fr}
+ .lockboard{height:315px}
+ .cylinder{width:78px;height:78px}.ring{inset:6px}.spoke{height:29px;width:3px}.target{width:17px;height:8px;top:2px}
+ .label{top:calc(50% + 50px);font-size:9px}.position{bottom:5px}
+ .coupling{width:38px;height:38px}.coupling:before{width:25px}.coupling:after{height:25px}
+ .controls{grid-template-columns:1fr 1fr}
+ .controls button:last-child{grid-column:1/-1}
+}
 </style>
 </head>
 <body>
-<div class="scan"></div>
-<div class="machine">
-<header class="head"><div class="logo">LOCK//07</div><div class="sub">MANUAL OVERRIDE / REV. 3.7</div></header>
-<div class="main">
-<section class="panel">
-<div class="label">ELECTROMECHANICAL SECURITY CORE</div>
-<div class="title">ALIGN THE LOCK CYLINDERS</div>
-<div class="instruction">TAP EACH CYLINDER TO MOVE ITS PIN. ALIGN ALL FOUR PINS WITH THE WHITE SECURITY BAND, THEN ENGAGE OVERRIDE.</div>
-<div class="lock" id="lock"></div>
-<div class="status" id="status">SYSTEM WAITING FOR INPUT</div>
-<div class="buttons"><button id="open">ENGAGE OVERRIDE</button><button id="reset">RESET</button></div>
-<div class="overlay" id="overlay"><div class="result"><div class="big" id="resultTitle"></div><p id="resultText"></p><button id="again">REINITIALIZE</button></div></div>
-<div class="help">MECHANISM: EACH CYLINDER HAS 6 POSITIONS. CORRECT ALIGNMENT IS REQUIRED.</div>
-</section>
-<aside class="side">
-<h2>SYSTEM DIAGNOSTICS</h2>
-<div class="stat"><span>SECURITY</span><span class="v">ACTIVE</span></div>
-<div class="stat"><span>DIFFICULTY</span><span class="v" id="difficulty">NORMAL</span></div>
-<div class="stat"><span>ATTEMPTS</span><span class="v attempts" id="attempts">● ● ● ●</span></div>
-<div class="stat"><span>TIME</span><span class="v" id="time">00:35</span></div>
-<div class="stat"><span>CYLINDERS</span><span class="v">04</span></div>
-<div class="log" id="log"></div>
-</aside>
-</div>
-</div>
-<script>
-(function(){
-"use strict";
-const lockEl=document.getElementById("lock"),statusEl=document.getElementById("status"),attemptEl=document.getElementById("attempts"),timeEl=document.getElementById("time"),logEl=document.getElementById("log"),overlay=document.getElementById("overlay"),title=document.getElementById("resultTitle"),text=document.getElementById("resultText");
-let pos=[],target=[],attempts=4,time=35,timer=null,over=false;
+<div class="app">
+  <div class="header">
+    <div class="logo">ЗАМОК//07</div>
+    <div class="version">ПРОМЫШЛЕННАЯ СИСТЕМА / ВЕРСИЯ 3.7<br>ЭЛЕКТРОМЕХАНИЧЕСКИЙ МОДУЛЬ БЕЗОПАСНОСТИ</div>
+  </div>
+  <div class="subtitle">МЕХАНИЧЕСКИЙ ВЗЛОМ</div>
 
-function log(s){logEl.innerHTML+="> "+s+"<br>";logEl.scrollTop=logEl.scrollHeight}
-function make(){
- pos=[];target=[];over=false;attempts=4;time=35;
- for(let i=0;i<4;i++){pos.push(Math.floor(Math.random()*6));target.push(2+Math.floor(Math.random()*2))}
- render(); logEl.innerHTML="";log("CORE INITIALIZED");log("FOUR CYLINDERS DETECTED");tick();
-}
+  <div class="instruction">
+    Поверните каждый цилиндр. <b>Белая зона — рабочее положение.</b>
+    Некоторые цилиндры механически связаны и вращаются вместе.
+    После выравнивания нажмите «РАЗБЛОКИРОВАТЬ».
+  </div>
+
+  <div class="status">
+    <div class="cell">СОСТОЯНИЕ<b id="state">АКТИВНО</b></div>
+    <div class="cell">ЭТАП<b>1 / 2</b></div>
+    <div class="cell">ОШИБКИ<b id="errors">● ● ● ●</b></div>
+    <div class="cell">ВРЕМЯ<b id="time">00:50</b></div>
+    <div class="cell">ЦИЛИНДРЫ<b>04</b></div>
+  </div>
+
+  <div class="panel">
+    <div class="systemline"><span>СИСТЕМА ГОТОВА К ВЗЛОМУ</span><span id="moves">ДЕЙСТВИЙ: 0</span></div>
+
+    <div class="lockboard" id="board">
+      <div class="mech"></div>
+      <div class="coupling c1"></div><div class="coupling c2"></div>
+      <div class="coupling c3"></div><div class="coupling c4"></div>
+
+      <button class="cylinder cyl1" data-id="1"><div class="ring"></div><div class="center"></div><div class="target"></div><div class="label">CYL-01</div><div class="position">POS 00</div></button>
+      <button class="cylinder cyl2" data-id="2"><div class="ring"></div><div class="center"></div><div class="target"></div><div class="label">CYL-02</div><div class="position">POS 00</div></button>
+      <button class="cylinder cyl3" data-id="3"><div class="ring"></div><div class="center"></div><div class="target"></div><div class="label">CYL-03</div><div class="position">POS 00</div></button>
+      <button class="cylinder cyl4" data-id="4"><div class="ring"></div><div class="center"></div><div class="target"></div><div class="label">CYL-04</div><div class="position">POS 00</div></button>
+    </div>
+
+    <div class="message" id="message">Готово. Нажмите на цилиндр, чтобы повернуть его на один сектор.</div>
+
+    <div class="controls">
+      <button id="unlock">РАЗБЛОКИРОВАТЬ</button>
+      <button id="reset">СБРОС</button>
+      <button id="diagnostic">ДИАГНОСТИКА</button>
+    </div>
+
+    <div class="warning">ПРЕДУПРЕЖДЕНИЕ: ПОВТОРНАЯ ОШИБКА ВЫЗОВЕТ АВАРИЙНУЮ БЛОКИРОВКУ.</div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2>ЗАМОК РАЗБЛОКИРОВАН</h2>
+    <p>Механические цилиндры выровнены. Модуль безопасности принимает конфигурацию.</p>
+    <button id="close">ПРОДОЛЖИТЬ</button>
+  </div>
+</div>
+
+<script>
+const cylinders={
+  1:{pos:0,delta:[1,1,0,0]},
+  2:{pos:0,delta:[0,1,1,0]},
+  3:{pos:0,delta:[0,0,1,1]},
+  4:{pos:0,delta:[0,0,0,1]}
+};
+// Рабочая комбинация специально задана для первого теста.
+// Она будет заменена на генератор после утверждения механики.
+const target=[2,3,6,7];
+let errors=4,moves=0,time=50,finished=false,timer;
+
 function render(){
- lockEl.innerHTML="";
- for(let i=0;i<4;i++){
-  const t=document.createElement("div");t.className="tumbler";t.dataset.i=i;
-  const band=document.createElement("div");band.className="target";
-  const rail=document.createElement("div");rail.className="rail";
-  const pin=document.createElement("div");pin.className="pin";
-  pin.style.top=(16+pos[i]*13)+"%";
-  const num=document.createElement("div");num.className="num";num.textContent="CYLINDER "+(i+1);
-  t.append(band,rail,pin,num);t.onclick=()=>move(i);lockEl.appendChild(t);
- }
- attemptEl.textContent=attempts?"● ".repeat(attempts).trim():"—";
+  for(let i=1;i<=4;i++){
+    const el=document.querySelector('[data-id="'+i+'"]');
+    const ring=el.querySelector('.ring');
+    ring.style.transform='rotate('+cylinders[i].pos*45+'deg)';
+    el.querySelector('.position').textContent='POS '+String(cylinders[i].pos).padStart(2,'0');
+    el.classList.toggle('ok',cylinders[i].pos===target[i-1]);
+  }
+  document.getElementById('moves').textContent='ДЕЙСТВИЙ: '+moves;
 }
-function move(i){
- if(over)return;
- pos[i]=(pos[i]+1)%6;render();
- const ok=pos.every((p,k)=>p>=2&&p<=3);
- statusEl.textContent=ok?"ALL CYLINDERS ALIGNED — READY":"ADJUST CYLINDERS";
- log("CYLINDER "+(i+1)+" ROTATED");
+function rotate(id){
+  if(finished)return;
+  const d=cylinders[id].delta;
+  for(let i=1;i<=4;i++) cylinders[i].pos=(cylinders[i].pos+d[i-1]+8)%8;
+  moves++;
+  render();
+  document.getElementById('message').textContent='Механизм сработал. Связанные цилиндры повернулись вместе.';
 }
-function engage(){
- if(over)return;
- const ok=pos.every((p,k)=>p>=2&&p<=3);
- if(ok)win(); else {attempts--;attemptEl.textContent=attempts?"● ".repeat(attempts).trim():"—";statusEl.textContent="OVERRIDE REJECTED";log("MISALIGNMENT / PENALTY");if(attempts<=0)lose()}
+function check(){
+  if(finished)return;
+  const ok=[1,2,3,4].every(i=>cylinders[i].pos===target[i-1]);
+  if(ok){
+    finished=true;clearInterval(timer);
+    document.getElementById('state').textContent='РАЗБЛОКИРОВАНО';
+    document.getElementById('message').textContent='КОНФИГУРАЦИЯ ПРИНЯТА. ВСЕ ЦИЛИНДРЫ В РАБОЧЕЙ ЗОНЕ.';
+    document.getElementById('overlay').style.display='flex';
+    return;
+  }
+  errors--;
+  document.getElementById('errors').textContent='● '.repeat(errors).trim()+(errors?'':'');
+  document.getElementById('message').textContent='ОШИБКА: цилиндры не выровнены. Осталось попыток: '+errors+'.';
+  if(errors<=0){
+    finished=true;clearInterval(timer);
+    document.getElementById('state').textContent='АВАРИЙНАЯ БЛОКИРОВКА';
+    document.getElementById('message').textContent='АВАРИЙНАЯ БЛОКИРОВКА. Нажмите СБРОС.';
+  }
 }
-function win(){over=true;clearInterval(timer);title.textContent="ACCESS GRANTED";text.textContent="LOCK MECHANISM DISENGAGED. CONTAINER READY.";overlay.classList.add("on")}
-function lose(){over=true;clearInterval(timer);title.textContent="ACCESS DENIED";text.textContent="SECURITY LOCKOUT. MANUAL RESET REQUIRED.";overlay.classList.add("on")}
-function tick(){
- clearInterval(timer);time=35;timeEl.textContent="00:35";
- timer=setInterval(()=>{if(over)return;time--;timeEl.textContent="00:"+String(Math.max(0,time)).padStart(2,"0");if(time<=0)lose()},1000)
+function reset(){
+  for(let i=1;i<=4;i++)cylinders[i].pos=0;
+  errors=4;moves=0;time=50;finished=false;
+  document.getElementById('errors').textContent='● ● ● ●';
+  document.getElementById('time').textContent='00:50';
+  document.getElementById('state').textContent='АКТИВНО';
+  document.getElementById('message').textContent='Готово. Нажмите на цилиндр, чтобы повернуть его на один сектор.';
+  render();startTimer();
 }
-document.getElementById("open").onclick=engage;
-document.getElementById("reset").onclick=make;
-document.getElementById("again").onclick=()=>{overlay.classList.remove("on");make()};
-make();
-})();
+function startTimer(){
+  clearInterval(timer);
+  timer=setInterval(()=>{
+    if(finished)return;
+    time--;
+    document.getElementById('time').textContent='00:'+String(time).padStart(2,'0');
+    if(time<=0){
+      finished=true;clearInterval(timer);
+      document.getElementById('state').textContent='АВАРИЙНАЯ БЛОКИРОВКА';
+      document.getElementById('message').textContent='ВРЕМЯ ИСТЕКЛО. Нажмите СБРОС.';
+    }
+  },1000);
+}
+document.querySelectorAll('.cylinder').forEach(el=>el.addEventListener('click',()=>rotate(Number(el.dataset.id))));
+document.getElementById('unlock').onclick=check;
+document.getElementById('reset').onclick=reset;
+document.getElementById('close').onclick=()=>document.getElementById('overlay').style.display='none';
+document.getElementById('diagnostic').onclick=()=>{
+ const s=[1,2,3,4].map(i=>'C'+i+':'+cylinders[i].pos).join(' | ');
+ document.getElementById('message').textContent='ДИАГНОСТИКА: '+s+' | МЕХАНИЧЕСКИЕ СВЯЗИ: C1→C2, C2→C3, C3→C4.';
+};
+render();startTimer();
 </script>
 </body>
 </html>
