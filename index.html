@@ -149,10 +149,20 @@ button.primary:disabled{opacity:.28;cursor:not-allowed;background:#1d3c1f;color:
   font-size:10px;line-height:1.5;letter-spacing:.4px;
 }
 .message.ok{color:#9cff9c}
+.message.lockout{
+  color:#9cff9c; text-align:center; font-size:16px; font-weight:900;
+  letter-spacing:3px; padding:18px 12px;
+  border-color:#69ff69;
+  background:#0a190b;
+  box-shadow:inset 0 0 20px #2dff2d12,0 0 18px #35ff3530;
+  text-shadow:0 0 9px #39ff3966;
+  animation:lockoutPulse 1s steps(2,end) infinite;
+}
+@keyframes lockoutPulse{50%{opacity:.55}}
 @media(max-width:600px){
   body{padding:8px 6px 18px}
   .timer-top{min-width:92px;padding:5px 7px}
-  .timer-top strong{font-size:22px}
+  .timer-top strong{font-size:27px}
   .machine{padding:12px 6px 14px}
   .machine-frame{padding:14px 6px}
   .rails{gap:5px}
@@ -175,7 +185,7 @@ button.primary:disabled{opacity:.28;cursor:not-allowed;background:#1d3c1f;color:
   color:#63bd68; text-shadow:0 0 7px #36ff3655;
 }
 .timer-top span{font-size:8px;letter-spacing:1.5px}
-.timer-top strong{font-size:25px;line-height:1;color:#9cff9c;letter-spacing:1px}
+.timer-top strong{font-size:31px;line-height:1;color:#9cff9c;letter-spacing:1px}
 .timer-top em{font-style:normal;font-size:8px;letter-spacing:1px}
 .timer-top.warning{border-color:#76ff76;box-shadow:0 0 15px #39ff3944,inset 0 0 14px #39ff3918}
 .timer-top.warning strong{animation:timerPulse .8s steps(2,end) infinite}
@@ -229,13 +239,11 @@ body:after{
     </div>
 
     <div class="info">
-      <div class="info-cell"><div class="info-label">ОШИБКИ</div><div class="info-value" id="errors">4</div></div>
       <div class="info-cell"><div class="info-label">СИСТЕМА</div><div class="info-value">ONLINE</div></div>
       <div class="info-cell"><div class="info-label">СОСТОЯНИЕ</div><div class="info-value" id="lockState">ЗАКРЫТО</div></div>
     </div>
 
-    <div class="message" id="message">Совместите затворы с белыми рабочими зонами. Связанные элементы перемещаются вместе.</div>
-
+    <div class="message" id="message" aria-live="polite"></div>
     <div class="controls">
       <button id="reset">СБРОС</button>
       <button class="primary" id="unlock" disabled>РАЗБЛОКИРОВАТЬ</button>
@@ -255,8 +263,6 @@ body:after{
   const message=document.getElementById('message');
   const timerTop=document.getElementById('timerTop');
   const timerTopValue=timerTop.querySelector('strong');
-  const errorsEl=document.getElementById('errors');
-
   const N=6;
   const targets=[2,1,3,2,4];
   // Одна независимая ось: C5.
@@ -268,7 +274,7 @@ body:after{
     3:[0,0,-1,1,0],// C4 -> C3 -1, C4 +1
     4:[0,0,0,0,1]  // C5 independent
   };
-  let pos=[0,0,0,0,0], errors=4, time=50, solved=false, timerId=null;
+  let pos=[0,0,0,0,0], time=60, solved=false, locked=false, timerId=null;
 
   const clamp=(v)=>((v%N)+N)%N;
 
@@ -340,17 +346,20 @@ body:after{
     unlock.disabled=!all||solved;
     stateText.textContent=solved?'ДОСТУП РАЗРЕШЁН':all?'ВСЕ ЗАТВОРЫ СИНХРОНИЗИРОВАНЫ':'ОЖИДАНИЕ НАСТРОЙКИ';
     lockState.textContent=solved?'ОТКРЫТ':'ЗАКРЫТО';
-    if(all&&!solved){
-      message.textContent='Все затворы находятся в рабочих позициях. Система готова к разблокировке.';
+    if(locked){
+      message.textContent='СИСТЕМА ЗАБЛОКИРОВАНА';
+      message.className='message lockout';
+    }else if(all&&!solved){
+      message.textContent='ВСЕ ЗАТВОРЫ СИНХРОНИЗИРОВАНЫ';
       message.className='message ok';
-    }else if(!solved){
-      message.textContent='Совместите затворы с белыми рабочими зонами. Связанные элементы перемещаются вместе.';
+    }else{
+      message.textContent='';
       message.className='message';
     }
   }
 
   function move(i,newValue){
-    if(solved)return;
+    if(solved||locked)return;
     const old=pos[i];
     if(old===newValue)return;
     const delta=(newValue-old+N)%N;
@@ -365,9 +374,10 @@ body:after{
   }
 
   unlock.addEventListener('click',()=>{
-    if(unlock.disabled)return;
+    if(unlock.disabled||locked)return;
     solved=true;
     clearInterval(timerId);
+    locked=false;
     stateText.textContent='ДОСТУП РАЗРЕШЁН';
     lockState.textContent='ОТКРЫТ';
     message.textContent='МЕХАНИЧЕСКАЯ БЛОКИРОВКА СНЯТА. МОДУЛЬ ГОТОВ К ПЕРЕХОДУ НА ЭТАП 2.';
@@ -376,15 +386,27 @@ body:after{
   });
 
   reset.addEventListener('click',()=>{
-    pos=[0,0,0,0,0]; errors=4;time=50;solved=false;
-    errorsEl.textContent=errors;
+    pos=[0,0,0,0,0]; time=60;solved=false;locked=false;
     timerTopValue.textContent=time;
     timerTop.classList.toggle('warning',time<=15);
     unlock.textContent='РАЗБЛОКИРОВАТЬ';
+    reset.disabled=false;
     clearInterval(timerId);
-    timerId=setInterval(()=>{if(!solved&&time>0){
+    timerId=setInterval(()=>{if(!solved&&!locked&&time>0){
       time--; timerTopValue.textContent=time;
       timerTop.classList.toggle('warning',time<=15);
+      if(time===0){
+        locked=true;
+        clearInterval(timerId);
+        unlock.disabled=true;
+        reset.disabled=false;
+        stateText.textContent='СИСТЕМА ЗАБЛОКИРОВАНА';
+        lockState.textContent='ЗАБЛОКИРОВАНО';
+        timerTop.classList.add('warning');
+        message.textContent='СИСТЕМА ЗАБЛОКИРОВАНА';
+        message.className='message lockout';
+        render();
+      }
     }},1000);
     render();
   });
@@ -392,9 +414,21 @@ body:after{
   timerTopValue.textContent=time;
   timerTop.classList.toggle('warning',time<=15);
   build();
-  timerId=setInterval(()=>{if(!solved&&time>0){
+  timerId=setInterval(()=>{if(!solved&&!locked&&time>0){
       time--; timerTopValue.textContent=time;
       timerTop.classList.toggle('warning',time<=15);
+      if(time===0){
+        locked=true;
+        clearInterval(timerId);
+        unlock.disabled=true;
+        reset.disabled=false;
+        stateText.textContent='СИСТЕМА ЗАБЛОКИРОВАНА';
+        lockState.textContent='ЗАБЛОКИРОВАНО';
+        timerTop.classList.add('warning');
+        message.textContent='СИСТЕМА ЗАБЛОКИРОВАНА';
+        message.className='message lockout';
+        render();
+      }
     }},1000);
 })();
 </script>
