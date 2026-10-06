@@ -1,355 +1,358 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>ЗАМОК//07 — версия 3.7</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ЗАМОК//07 — v1.4</title>
 <style>
+:root{
+  --bg:#090a0b; --panel:#111315; --panel2:#17191c; --line:#34383d;
+  --text:#e9ecef; --muted:#858b91; --white:#f7f8f9; --ok:#f7f8f9;
+}
 *{box-sizing:border-box}
-html,body{margin:0;background:#050607;color:#e7e9e8;font-family:"Courier New",monospace}
-body{min-height:100vh;display:flex;justify-content:center;padding:14px}
-button{font:inherit}
-.app{width:min(860px,100%);border:1px solid #666b69;background:#090b0c;padding:16px;box-shadow:0 0 32px #000}
-.header{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid #515654;padding-bottom:14px}
-.logo{font:900 26px Arial,Helvetica,sans-serif;letter-spacing:5px}
-.ver{font-size:12px;color:#a4aaa8;line-height:1.55;text-align:right}
-.subtitle{margin-top:10px;font-size:12px;letter-spacing:2px;color:#aeb4b2}
-.instruction{margin-top:14px;border:1px solid #454a48;padding:12px;font-size:12px;color:#c6cbca;line-height:1.55}
-.status{display:grid;grid-template-columns:1.35fr 1fr 1fr 1fr 1fr;gap:7px;margin:12px 0}
-.cell{border:1px solid #454a48;padding:8px;color:#9fa5a3;font-size:10px}
-.cell b{display:block;color:#e7e9e8;margin-top:4px;font-size:12px}
-.module{border:1px solid #565b59;padding:14px;background:#07090a}
-.module-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:14px}
-.module-head span{font-size:11px;color:#aeb4b2}
-.module-title{font-size:14px;letter-spacing:2px}
-.lock-panel{position:relative;border:1px solid #393e3d;background:
-linear-gradient(#101314 1px,transparent 1px),
-linear-gradient(90deg,#101314 1px,transparent 1px);
-background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
-.sliders{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;max-width:700px;margin:auto;position:relative;z-index:2}
-.slider-wrap{position:relative;min-width:0}
-.track{height:300px;border:1px solid #646a68;background:#111516;position:relative;overflow:visible}
-.track:before,.track:after{content:"";position:absolute;left:0;right:0;height:1px;background:#2c3130}
-.track:before{top:33.33%}.track:after{top:66.66%}
-.track .slot-line{position:absolute;left:8px;right:8px;height:1px;background:#555b59;opacity:.55}
-.ticks{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:0 6px;pointer-events:none}
-.tick{height:1px;background:#4a504e;opacity:.65}
-.security-zone{position:absolute;left:2px;right:2px;height:48px;border:2px solid #f4f5f4;background:#dfe2e1;color:#080909;z-index:1;pointer-events:none}
-.security-zone:before{content:"";position:absolute;left:-7px;top:50%;width:7px;height:2px;background:#f4f5f4}
-.security-zone:after{content:"";position:absolute;right:-7px;top:50%;width:7px;height:2px;background:#f4f5f4}
-.security-zone span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#080909;font-size:9px;font-weight:900;letter-spacing:1px}
-.slider.on-target{background:#ffffff!important;border-color:#ffffff!important;box-shadow:0 0 0 3px #080909,0 0 0 5px #ffffff;z-index:5}
-.slider.on-target:before{content:"✓";position:absolute;right:-24px;top:50%;transform:translateY(-50%);color:#fff;font:bold 15px Arial}
-.slider{position:absolute;left:50%;width:72px;height:38px;transform:translateX(-50%);border:2px solid #e1e4e3;background:#bfc3c2;box-shadow:0 0 0 1px #111;cursor:pointer;touch-action:none;z-index:4}
-.slider:after{content:"";position:absolute;width:10px;height:10px;left:50%;top:50%;transform:translate(-50%,-50%);background:#080909}
-.slider .grip{position:absolute;left:8px;right:8px;top:7px;height:3px;background:#6a706e;box-shadow:0 8px 0 #6a706e,0 16px 0 #6a706e}
-.col-label{text-align:center;margin-top:10px;font-size:10px;color:#b9bfbd;letter-spacing:1px}
-.pos{text-align:center;margin-top:4px;font-size:10px;color:#747b78}
-.link-row{height:40px;position:relative;max-width:650px;margin:-14px auto 0;z-index:1}
-.link-line{position:absolute;height:4px;background:#555b59;top:18px;left:10%;width:20%}
-.link-line.reverse{background:#696e6c}
-.link-line:before,.link-line:after{content:"⚙";position:absolute;top:50%;transform:translateY(-50%);font-family:Arial,sans-serif;color:#818785;background:#080a0b;font-size:18px}
-.link-line:before{left:-10px}.link-line:after{right:-10px}
-.link-label{position:absolute;top:27px;left:10%;font-size:8px;color:#727976;letter-spacing:1px}
-.link-row2{height:44px;position:relative;max-width:700px;margin:-6px auto 0;z-index:1}
-.link2{position:absolute;left:30%;width:20%;top:20px;height:4px;background:#555b59}
-.link3{position:absolute;left:50%;width:20%;top:20px;height:4px;background:#555b59}
-.link2:before,.link2:after{content:"⚙";position:absolute;top:50%;transform:translateY(-50%);font-family:Arial,sans-serif;color:#818785;background:#080a0b;font-size:18px}
-.link2:before{left:-10px}.link2:after{right:-10px}
-.link3:before,.link3:after{content:"⚙";position:absolute;top:50%;transform:translateY(-50%);font-family:Arial,sans-serif;color:#818785;background:#080a0b;font-size:18px}
-.link3:before{left:-10px}.link3:after{right:-10px}
-.independent{position:absolute;right:7px;top:9px;font-size:8px;color:#8d9491;letter-spacing:1px}
-.result{margin-top:12px;border-top:1px solid #353a38;padding-top:10px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px;color:#b5bbb9}
-.result strong{color:#e9eceb}
-.actions{display:grid;grid-template-columns:1.3fr .9fr .9fr;gap:8px;margin-top:12px}
-.actions button{min-height:46px;border:1px solid #707674;background:#111415;color:#e8ebea;letter-spacing:1px;font-weight:800}
-.actions button:active{background:#252928}
-.actions button:disabled{opacity:.38;cursor:not-allowed}
-.actions button#unlock.ready{opacity:1;border-color:#f0f2f1;box-shadow:0 0 0 1px #f0f2f1}
-.warning{margin-top:12px;border:1px solid #444a48;padding:9px;font-size:10px;line-height:1.55;color:#a8aeac}
-.message{margin-top:10px;min-height:25px;font-size:11px;line-height:1.5;color:#c0c6c4}
-.overlay{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
-.modal{width:min(430px,100%);background:#090b0c;border:1px solid #d6dbd9;padding:22px;text-align:center}
-.modal h2{font-family:Arial,Helvetica,sans-serif;letter-spacing:3px;margin:0 0 9px}.modal p{font-size:12px;line-height:1.55;color:#b8bebc}.modal button{width:100%;min-height:46px;border:1px solid #777c79;background:#111415;color:#e9eceb}
-@media(max-width:660px){
- body{padding:7px}.app{padding:10px}.logo{font-size:20px}.ver{font-size:9px}
- .status{grid-template-columns:repeat(2,1fr)}
- .lock-panel{padding:26px 10px 38px}
- .sliders{gap:7px}
- .track{height:270px}
- .security-zone{height:36px}
- .slider{width:54px;height:32px}
- .slider .grip{left:6px;right:6px;top:5px;height:2px;box-shadow:0 7px 0 #6a706e,0 14px 0 #6a706e}
- .independent{top:5px;font-size:7px}
- .actions{grid-template-columns:1fr 1fr}.actions button:first-child{grid-column:1/-1}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+body{
+  min-height:100vh; display:flex; justify-content:center; align-items:flex-start;
+  padding:14px 10px 24px;
+  background:
+    radial-gradient(circle at 50% 12%,#25292d 0,#121416 28%,#090a0b 62%);
+}
+.app{width:min(900px,100%);}
+.header{
+  border:1px solid #30343a; background:linear-gradient(#171a1d,#101214);
+  padding:12px 14px; position:relative; overflow:hidden;
+  box-shadow:0 12px 35px #0008, inset 0 1px #ffffff10;
+}
+.header:before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#f0f1f2;
+}
+.brand{font-weight:900;letter-spacing:4px;font-size:21px}
+.sub{margin-top:3px;color:#8f959a;font-size:10px;letter-spacing:2px}
+.statusbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.badge{
+  border:1px solid #3b4045;background:#0b0d0f;padding:6px 9px;
+  font-size:10px;letter-spacing:1px;color:#b9bdc1;
+}
+.badge strong{color:#fff}
+.module{
+  margin-top:10px;border:1px solid #34383d;background:#101214;
+  box-shadow:0 16px 40px #0009;
+}
+.module-head{
+  padding:11px 13px;border-bottom:1px solid #2d3135;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+.module-title{font-size:11px;letter-spacing:2px;font-weight:800}
+.module-state{font-size:10px;color:#858b91;letter-spacing:1px}
+.machine{
+  position:relative;padding:18px 12px 20px;
+  background:
+    linear-gradient(#ffffff03 1px,transparent 1px),
+    linear-gradient(90deg,#ffffff03 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.machine-frame{
+  border:1px solid #3b4045;padding:18px 12px 16px;
+  background:linear-gradient(180deg,#15181b,#0d0f11);
+  position:relative;
+}
+.machine-frame:before,.machine-frame:after{
+  content:"";position:absolute;left:7px;right:7px;height:1px;background:#ffffff0d;
+}
+.machine-frame:before{top:7px}.machine-frame:after{bottom:7px}
+.rails{
+  display:grid;grid-template-columns:repeat(5,minmax(48px,1fr));gap:9px;
+  max-width:760px;margin:0 auto;position:relative;
+}
+.rail-wrap{position:relative;min-width:0}
+.rail-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;color:#92989d;font-size:10px;letter-spacing:1px}
+.rail-label b{color:#d9dcdf;font-size:11px}
+.rail{
+  position:relative;height:285px;border:1px solid #41464b;background:#090b0d;
+  overflow:hidden;touch-action:none;cursor:pointer;
+  box-shadow:inset 0 0 0 3px #050607,inset 0 0 25px #000;
+}
+.rail:before{
+  content:"";position:absolute;left:50%;top:8px;bottom:8px;width:18px;transform:translateX(-50%);
+  border:1px solid #353a3f;background:linear-gradient(90deg,#08090a,#202327,#08090a);
+}
+.slot{
+  position:absolute;left:50%;transform:translate(-50%,-50%);
+  width:42px;height:29px;border:1px solid #292d31;background:#0d0f11;
+  display:flex;align-items:center;justify-content:center;
+}
+.slot .num{font-size:8px;color:#555b60}
+.slot.work{
+  border:2px solid #f3f4f5;background:#e9eaeb;color:#08090a;
+  box-shadow:0 0 0 1px #7d8287,0 0 13px #fff3;
+}
+.slot.work .num{color:#090a0b;font-weight:900}
+.handle{
+  position:absolute;left:50%;transform:translate(-50%,-50%);
+  width:52px;height:38px;border:1px solid #777d82;
+  background:linear-gradient(180deg,#d9dcde,#73787c 42%,#35393c 43%,#a9adb0);
+  box-shadow:0 3px 0 #151719,0 0 0 2px #0a0b0c;
+  z-index:5;transition:top .13s cubic-bezier(.2,.8,.2,1);
+}
+.handle:before,.handle:after{
+  content:"";position:absolute;top:7px;bottom:7px;width:3px;background:#303437;
+}
+.handle:before{left:7px}.handle:after{right:7px}
+.handle .center{width:19px;height:5px;background:#25282b;border:1px solid #111;box-shadow:inset 0 1px #fff4}
+.okmark{
+  position:absolute;right:4px;top:4px;width:17px;height:17px;
+  display:none;align-items:center;justify-content:center;background:#f1f2f3;color:#090a0b;
+  font-weight:900;font-size:11px;z-index:7;
+}
+.rail.correct{border-color:#aeb3b7;box-shadow:inset 0 0 0 2px #fff2,inset 0 0 28px #fff1}
+.rail.correct .okmark{display:flex}
+.rail.correct .handle{border-color:#fff}
+.link-layer{position:absolute;left:0;right:0;top:54px;height:285px;pointer-events:none;z-index:3}
+.link{
+  position:absolute;height:3px;background:#666b70;box-shadow:0 0 0 1px #161819;
+  transform-origin:left center;opacity:.9;
+}
+.link-dot{
+  position:absolute;width:10px;height:10px;border:1px solid #999;transform:translate(-50%,-50%);
+  background:#151719;border-radius:50%;
+}
+.link-text{
+  position:absolute;font-size:8px;letter-spacing:1px;color:#70767b;white-space:nowrap;
+  transform:translate(-50%,-50%);background:#101214;padding:2px 4px;
+}
+.legend{
+  display:flex;justify-content:center;gap:15px;flex-wrap:wrap;margin-top:15px;color:#777d82;
+  font-size:9px;letter-spacing:1px;text-transform:uppercase;
+}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend .box{width:13px;height:8px;border:1px solid #fff;background:#eee}
+.legend .line{width:20px;height:2px;background:#6b7075}
+.controls{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px;border-top:1px solid #2d3135;
+}
+button{
+  min-height:46px;border:1px solid #4a4f54;background:#181b1e;color:#e7e9eb;
+  font-weight:800;letter-spacing:1px;font-size:11px;cursor:pointer;
+}
+button:active{transform:translateY(1px)}
+button.primary{background:#e8e9ea;color:#08090a;border-color:#fff}
+button.primary:disabled{opacity:.28;cursor:not-allowed;background:#9da1a4;color:#111}
+.info{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#2d3135;
+  border-top:1px solid #2d3135;
+}
+.info-cell{background:#101214;padding:10px 12px}
+.info-label{font-size:8px;color:#6e7479;letter-spacing:1px}
+.info-value{font-size:12px;margin-top:3px;font-weight:800}
+.message{
+  padding:11px 13px;border-top:1px solid #2d3135;color:#8d9398;
+  font-size:10px;line-height:1.5;letter-spacing:.4px;
+}
+.message.ok{color:#f1f2f3}
+@media(max-width:600px){
+  body{padding:8px 6px 18px}
+  .brand{font-size:18px}
+  .machine{padding:12px 6px 14px}
+  .machine-frame{padding:14px 6px}
+  .rails{gap:5px}
+  .rail{height:250px}
+  .slot{width:35px;height:26px}
+  .handle{width:43px;height:34px}
+  .handle:before{left:5px}.handle:after{right:5px}
+  .link-layer{top:51px;height:250px}
+  .link-text{display:none}
+  .info{grid-template-columns:1fr 1fr 1fr}
+  .info-value{font-size:11px}
 }
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <div class="logo">ЗАМОК//07</div>
-    <div class="ver">ПРОМЫШЛЕННАЯ СИСТЕМА / ВЕРСИЯ 3.8<br>ЭЛЕКТРОМЕХАНИЧЕСКИЙ МОДУЛЬ БЕЗОПАСНОСТИ</div>
-  </div>
-  <div class="subtitle">МЕХАНИЧЕСКИЙ ВЗЛОМ</div>
-  <div class="instruction">
-    Сдвигайте ползунки по вертикальным направляющим. <b>Белая рамка WORK / SET HERE — точная рабочая позиция.</b>
-    Когда ползунок установлен правильно, он получает отметку ✓. Связанные цилиндры двигаются вместе.
-    Кнопка «РАЗБЛОКИРОВАТЬ» станет активной только после правильного положения всех пяти.
-  </div>
+<main class="app" id="lockApp">
+  <section class="header">
+    <div class="brand">ЗАМОК//07</div>
+    <div class="sub">ПРОМЫШЛЕННАЯ СИСТЕМА / ВЕРСИЯ 3.7</div>
+    <div class="statusbar">
+      <div class="badge">МОДУЛЬ: <strong>ЭЛЕКТРОМЕХАНИЧЕСКИЙ</strong></div>
+      <div class="badge">РЕЖИМ: <strong>МЕХАНИЧЕСКИЙ ВЗЛОМ</strong></div>
+      <div class="badge">ЭТАП: <strong>1 / 2</strong></div>
+    </div>
+  </section>
 
-  <div class="status">
-    <div class="cell">СОСТОЯНИЕ<b id="state">АКТИВНО</b></div>
-    <div class="cell">ЭТАП<b>1 / 2</b></div>
-    <div class="cell">ОШИБКИ<b id="errors">● ● ● ●</b></div>
-    <div class="cell">ВРЕМЯ<b id="time">00:50</b></div>
-    <div class="cell">ЦИЛИНДРЫ<b>05</b></div>
-  </div>
-
-  <div class="module">
+  <section class="module">
     <div class="module-head">
-      <span class="module-title">ЭЛЕКТРОМЕХАНИЧЕСКИЙ БЛОК</span>
-      <span id="moveCount">ДЕЙСТВИЙ: 0</span>
+      <div class="module-title">БЛОК СИНХРОНИЗАЦИИ ЗАТВОРОВ</div>
+      <div class="module-state" id="stateText">ОЖИДАНИЕ НАСТРОЙКИ</div>
     </div>
 
-    <div class="lock-panel">
-      <div class="independent">CYL-05 / INDEPENDENT</div>
-
-      <div class="sliders" id="sliders">
-        <div class="slider-wrap">
-          <div class="track" data-track="1"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
-            <div class="security-zone" data-work="3"><span>WORK / SET HERE</span></div>
-            <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
-            <div class="slider" data-id="1"><div class="grip"></div></div>
-          </div>
-          <div class="col-label">CYLINDER 01</div><div class="pos" id="pos1">POS 00</div>
+    <div class="machine">
+      <div class="machine-frame">
+        <div class="rails" id="rails"></div>
+        <div class="link-layer" id="links"></div>
+        <div class="legend">
+          <span><i class="box"></i> рабочая позиция</span>
+          <span><i class="line"></i> механическая связь</span>
         </div>
-
-        <div class="slider-wrap">
-          <div class="track" data-track="2"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
-            <div class="security-zone" data-work="2"><span>WORK / SET HERE</span></div>
-            <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
-            <div class="slider" data-id="2"><div class="grip"></div></div>
-          </div>
-          <div class="col-label">CYLINDER 02</div><div class="pos" id="pos2">POS 00</div>
-        </div>
-
-        <div class="slider-wrap">
-          <div class="track" data-track="3"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
-            <div class="security-zone" data-work="2"><span>WORK / SET HERE</span></div>
-            <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
-            <div class="slider" data-id="3"><div class="grip"></div></div>
-          </div>
-          <div class="col-label">CYLINDER 03</div><div class="pos" id="pos3">POS 00</div>
-        </div>
-
-        <div class="slider-wrap">
-          <div class="track" data-track="4"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
-            <div class="security-zone" data-work="5"><span>WORK / SET HERE</span></div>
-            <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
-            <div class="slider" data-id="4"><div class="grip"></div></div>
-          </div>
-          <div class="col-label">CYLINDER 04</div><div class="pos" id="pos4">POS 00</div>
-        </div>
-
-        <div class="slider-wrap">
-          <div class="track" data-track="5"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
-            <div class="security-zone" data-work="4"><span>WORK / SET HERE</span></div>
-            <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
-            <div class="slider" data-id="5"><div class="grip"></div></div>
-          </div>
-          <div class="col-label">CYLINDER 05</div><div class="pos" id="pos5">POS 00</div>
-        </div>
-      </div>
-
-      <div class="link-row">
-        <div class="link-line"><span class="link-label">MECHANICAL LINK A</span></div>
-      </div>
-      <div class="link-row2">
-        <div class="link2"></div>
-        <div class="link3"></div>
-      </div>
-
-      <div class="result">
-        <span>ВЫРАВНИВАНИЕ: <strong id="aligned">0 / 5</strong></span>
-        <span id="linkState">ПРИВОДЫ: C1↔C2 / C2↔C3 / C3↔C4</span>
       </div>
     </div>
 
-    <div class="message" id="message">Нажимайте на ползунок или по дорожке, чтобы сместить цилиндр на один сектор. Связанные элементы сдвинутся автоматически. Пятый цилиндр независим.</div>
+    <div class="info">
+      <div class="info-cell"><div class="info-label">ОШИБКИ</div><div class="info-value" id="errors">4</div></div>
+      <div class="info-cell"><div class="info-label">ВРЕМЯ</div><div class="info-value" id="timer">50 s</div></div>
+      <div class="info-cell"><div class="info-label">СОСТОЯНИЕ</div><div class="info-value" id="lockState">ЗАКРЫТО</div></div>
+    </div>
 
-    <div class="actions">
-      <button id="unlock" disabled>РАЗБЛОКИРОВАТЬ</button>
+    <div class="message" id="message">Совместите затворы с белыми рабочими зонами. Связанные элементы перемещаются вместе.</div>
+
+    <div class="controls">
       <button id="reset">СБРОС</button>
-      <button id="diagnostic">ДИАГНОСТИКА</button>
+      <button class="primary" id="unlock" disabled>РАЗБЛОКИРОВАТЬ</button>
     </div>
-
-    <div class="warning">ПРЕДУПРЕЖДЕНИЕ: ПОВТОРНАЯ ОШИБКА ВЫЗОВЕТ АВАРИЙНУЮ БЛОКИРОВКУ.</div>
-  </div>
-</div>
-
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <h2>ДОСТУП РАЗРЕШЁН</h2>
-    <p>Все пять цилиндров находятся в рабочей зоне. Электромеханический модуль разблокирован.</p>
-    <button id="close">ЗАКРЫТЬ</button>
-  </div>
-</div>
+  </section>
+</main>
 
 <script>
-const N=6;
-const state={pos:[0,0,0,0,0],moves:0,errors:4,time:50,finished:false,timer:null};
-
-// Единственная рабочая конфигурация для теста. Все связи работают по модулю 6.
-const target=[3,2,2,5,4];
-
-// Механические связи v1.3.
-// C1 -> C1 +1, C2 -1
-// C2 -> C1 +1, C2 +1, C3 +1
-// C3 -> C2 -1, C3 +1, C4 +1
-// C4 -> C3 -1, C4 +1
-// C5 полностью независим.
-const actions={
-  1:[1,-1,0,0,0],
-  2:[1,1,1,0,0],
-  3:[0,-1,1,1,0],
-  4:[0,0,-1,1,0],
-  5:[0,0,0,0,1]
-};
-
-const sliderEls=[1,2,3,4,5].map(i=>document.querySelector('.slider[data-id="'+i+'"]'));
-const tracks=[1,2,3,4,5].map(i=>document.querySelector('.track[data-track="'+i+'"]'));
-
-function clamp(v){return ((v%N)+N)%N}
-function setPos(i,v){state.pos[i]=clamp(v)}
-
-function positionWorkZones(){
-  const tracks=document.querySelectorAll('.track');
-  tracks.forEach((track,i)=>{
-    const zone=track.querySelector('.security-zone');
-    const work=Number(zone.dataset.work);
-    const slider=track.querySelector('.slider');
-    const trackH=track.clientHeight;
-    const sliderH=slider.offsetHeight;
-    const travel=Math.max(1,trackH-sliderH-4);
-    const sliderTop=(work/(N-1))*travel+2;
-    const sliderCenter=sliderTop+sliderH/2;
-    zone.style.top=(sliderCenter-zone.offsetHeight/2)+'px';
-  });
-}
-
-function render(){
-  positionWorkZones();
-  const trackH=tracks[0].clientHeight;
-  const sliderH=sliderEls[0].offsetHeight;
-  const travel=Math.max(1,trackH-sliderH-4);
-  for(let i=0;i<5;i++){
-    const y=(state.pos[i]/(N-1))*travel+2;
-    sliderEls[i].style.top=y+'px';
-    document.getElementById('pos'+(i+1)).textContent='POS '+String(state.pos[i]).padStart(2,'0');
-    const hit=state.pos[i]===target[i];
-    sliderEls[i].classList.toggle('on-target',hit);
-    sliderEls[i].setAttribute('aria-label',hit?'CYLINDER '+(i+1)+' — РАБОЧАЯ ЗОНА':'CYLINDER '+(i+1)+' — ПОЗИЦИЯ '+state.pos[i]);
-  }
-  document.getElementById('moveCount').textContent='ДЕЙСТВИЙ: '+state.moves;
-  const aligned=state.pos.filter((v,i)=>v===target[i]).length;
-  document.getElementById('aligned').textContent=aligned+' / 5';
+(() => {
+  const root=document.getElementById('lockApp');
+  const railsEl=document.getElementById('rails');
+  const linksEl=document.getElementById('links');
   const unlock=document.getElementById('unlock');
-  unlock.disabled=aligned!==5;
-  unlock.classList.toggle('ready',aligned===5);
-  document.getElementById('linkState').textContent='ПРИВОДЫ: C1↔C2 / C2↔C3 / C3↔C4 / C5 НЕЗАВИСИМ';
-}
+  const reset=document.getElementById('reset');
+  const stateText=document.getElementById('stateText');
+  const lockState=document.getElementById('lockState');
+  const message=document.getElementById('message');
+  const timerEl=document.getElementById('timer');
+  const errorsEl=document.getElementById('errors');
 
-function step(id){
-  if(state.finished)return;
-  const d=actions[id];
-  for(let i=0;i<5;i++) setPos(i,state.pos[i]+d[i]);
-  state.moves++;
-  render();
-  const aligned=state.pos.filter((v,i)=>v===target[i]).length;
-  document.getElementById('message').textContent='МЕХАНИЗМ: CYL-0'+id+' активирован. '+aligned+'/5 цилиндров в рабочей зоне.';
-  if(aligned===5){
-    document.getElementById('message').textContent='✓ ВСЕ 5 ЦИЛИНДРОВ В ЗОНЕ WORK. РАЗБЛОКИРОВАТЬ ДОСТУПНО.';
-  }
-}
+  const N=6;
+  const targets=[2,1,3,2,4];
+  // Одна независимая ось: C5.
+  // Связи сохраняют простую механику v1.3.
+  const effects={
+    0:[0,1,0,0,0], // C1 -> C2 +1
+    1:[0,1,1,0,0], // C2 -> C2 +1, C3 +1
+    2:[0,-1,1,1,0],// C3 -> C2 -1, C3 +1, C4 +1
+    3:[0,0,-1,1,0],// C4 -> C3 -1, C4 +1
+    4:[0,0,0,0,1]  // C5 independent
+  };
+  let pos=[0,0,0,0,0], errors=4, time=50, solved=false, timerId=null;
 
-function check(){
-  if(state.finished)return;
-  const ok=state.pos.every((v,i)=>v===target[i]);
-  if(ok){
-    state.finished=true;clearInterval(state.timer);
-    document.getElementById('state').textContent='РАЗБЛОКИРОВАНО';
-    document.getElementById('message').textContent='КОНФИГУРАЦИЯ ПРИНЯТА. МОДУЛЬ ГОТОВ К ОТКРЫТИЮ.';
-    document.getElementById('overlay').style.display='flex';
-    return;
-  }
-  state.errors--;
-  document.getElementById('errors').textContent=state.errors>0?'● '.repeat(state.errors).trim():'—';
-  document.getElementById('message').textContent='ОШИБКА: рабочая комбинация не достигнута. Осталось попыток: '+state.errors+'.';
-  if(state.errors<=0){
-    state.finished=true;clearInterval(state.timer);
-    document.getElementById('state').textContent='АВАРИЙНАЯ БЛОКИРОВКА';
-    document.getElementById('message').textContent='АВАРИЙНАЯ БЛОКИРОВКА. Нажмите СБРОС.';
-  }
-}
+  const clamp=(v)=>((v%N)+N)%N;
 
-function reset(){
-  state.pos=[0,0,0,0,0];state.moves=0;state.errors=4;state.time=50;state.finished=false;
-  document.getElementById('errors').textContent='● ● ● ●';
-  document.getElementById('time').textContent='00:50';
-  document.getElementById('state').textContent='АКТИВНО';
-  document.getElementById('message').textContent='Нажимайте на ползунок или по дорожке, чтобы сместить цилиндр на один сектор.';
-  render();startTimer();
-}
-function startTimer(){
-  clearInterval(state.timer);
-  state.timer=setInterval(()=>{
-    if(state.finished)return;
-    state.time--;
-    document.getElementById('time').textContent='00:'+String(Math.max(0,state.time)).padStart(2,'0');
-    if(state.time<=0){
-      state.finished=true;clearInterval(state.timer);
-      document.getElementById('state').textContent='АВАРИЙНАЯ БЛОКИРОВКА';
-      document.getElementById('message').textContent='ВРЕМЯ ИСТЕКЛО. Нажмите СБРОС.';
+  function build(){
+    railsEl.innerHTML='';
+    for(let i=0;i<5;i++){
+      const wrap=document.createElement('div');
+      wrap.className='rail-wrap';
+      wrap.innerHTML=`<div class="rail-label"><b>C${i+1}</b><span>${i===4?'IND':'LINK'}</span></div>
+        <div class="rail" data-i="${i}"><div class="okmark">✓</div></div>`;
+      const rail=wrap.querySelector('.rail');
+      for(let p=0;p<N;p++){
+        const slot=document.createElement('div');
+        slot.className='slot'+(p===targets[i]?' work':'');
+        slot.style.top=(18+p*(214/(N-1)))+'px';
+        slot.dataset.pos=p;
+        slot.innerHTML=`<span class="num">${String(p+1).padStart(2,'0')}</span>`;
+        rail.appendChild(slot);
+      }
+      const h=document.createElement('div');
+      h.className='handle'; h.innerHTML='<div class="center"></div>';
+      rail.appendChild(h);
+      wrap.dataset.index=i;
+      railsEl.appendChild(wrap);
+
+      let dragging=false;
+      const setFromY=(clientY)=>{
+        const r=rail.getBoundingClientRect();
+        const y=Math.max(0,Math.min(r.height,clientY-r.top));
+        const step=r.height/(N-1);
+        const p=clamp(Math.round(y/step));
+        move(i,p);
+      };
+      rail.addEventListener('pointerdown',e=>{dragging=true;rail.setPointerCapture?.(e.pointerId);setFromY(e.clientY);});
+      rail.addEventListener('pointermove',e=>{if(dragging)setFromY(e.clientY)});
+      rail.addEventListener('pointerup',()=>dragging=false);
+      rail.addEventListener('pointercancel',()=>dragging=false);
+      rail.addEventListener('click',e=>{if(e.pointerType!=='mouse')return;setFromY(e.clientY)});
     }
-  },1000);
-}
+    renderLinks();
+    render();
+  }
 
-sliderEls.forEach((el,i)=>{
-  let downY=0;
-  let dragging=false;
-  el.addEventListener('pointerdown',e=>{
-    if(state.finished)return;
-    downY=e.clientY;dragging=true;el.setPointerCapture?.(e.pointerId);
-  });
-  el.addEventListener('pointerup',e=>{
-    if(state.finished)return;
-    const dy=e.clientY-downY;
-    if(Math.abs(dy)>12){
-      const steps=dy<0?1:-1;
-      const count=Math.min(2,Math.max(1,Math.round(Math.abs(dy)/70)));
-      for(let k=0;k<count;k++)step(i+1);
-    }else{
-      step(i+1);
+  function renderLinks(){
+    linksEl.innerHTML='';
+    // Approximate visual rods connecting the center axes.
+    const width=100/5;
+    const y=142;
+    [[0,1,'↔'],[1,2,'↔'],[2,3,'↔']].forEach(([a,b,label])=>{
+      const x1=(a+.5)*width, x2=(b+.5)*width;
+      const line=document.createElement('div');
+      line.className='link';
+      line.style.left=x1+'%'; line.style.top=y+'px'; line.style.width=(x2-x1)+'%';
+      linksEl.appendChild(line);
+      const dot1=document.createElement('div');dot1.className='link-dot';dot1.style.left=x1+'%';dot1.style.top=y+'px';
+      const dot2=document.createElement('div');dot2.className='link-dot';dot2.style.left=x2+'%';dot2.style.top=y+'px';
+      linksEl.append(dot1,dot2);
+    });
+  }
+
+  function render(){
+    [...railsEl.children].forEach((wrap,i)=>{
+      const rail=wrap.querySelector('.rail'), h=rail.querySelector('.handle');
+      const step=rail.clientHeight/(N-1);
+      h.style.top=(pos[i]*step)+'px';
+      rail.classList.toggle('correct',pos[i]===targets[i]);
+    });
+    const all=pos.every((v,i)=>v===targets[i]);
+    unlock.disabled=!all||solved;
+    stateText.textContent=solved?'ДОСТУП РАЗРЕШЁН':all?'ВСЕ ЗАТВОРЫ СИНХРОНИЗИРОВАНЫ':'ОЖИДАНИЕ НАСТРОЙКИ';
+    lockState.textContent=solved?'ОТКРЫТ':'ЗАКРЫТО';
+    if(all&&!solved){
+      message.textContent='Все затворы находятся в рабочих позициях. Система готова к разблокировке.';
+      message.className='message ok';
+    }else if(!solved){
+      message.textContent='Совместите затворы с белыми рабочими зонами. Связанные элементы перемещаются вместе.';
+      message.className='message';
     }
-    dragging=false;
-  });
-});
-tracks.forEach((tr,i)=>{
-  tr.addEventListener('click',e=>{
-    if(e.target.classList.contains('slider')||e.target.closest('.slider'))return;
-    step(i+1);
-  });
-});
+  }
 
-document.getElementById('unlock').addEventListener('click',check);
-document.getElementById('reset').addEventListener('click',reset);
-document.getElementById('close').addEventListener('click',()=>document.getElementById('overlay').style.display='none');
-document.getElementById('diagnostic').addEventListener('click',()=>{
-  document.getElementById('message').textContent='ДИАГНОСТИКА: C1='+state.pos[0]+' C2='+state.pos[1]+' C3='+state.pos[2]+' C4='+state.pos[3]+' C5='+state.pos[4]+' / связи: C1↔C2, C2↔C3, C3↔C4 / C5 независим.';
-});
-window.addEventListener('resize',render);
-render();startTimer();
+  function move(i,newValue){
+    if(solved)return;
+    const old=pos[i];
+    if(old===newValue)return;
+    const delta=(newValue-old+N)%N;
+    const signed=delta<=N/2?delta:delta-N;
+    const next=pos.slice();
+    Object.keys(effects[i]).forEach(k=>{
+      const d=effects[i][k]||0;
+      next[k]=clamp(next[k]+signed*d);
+    });
+    pos=next;
+    render();
+  }
+
+  unlock.addEventListener('click',()=>{
+    if(unlock.disabled)return;
+    solved=true;
+    clearInterval(timerId);
+    stateText.textContent='ДОСТУП РАЗРЕШЁН';
+    lockState.textContent='ОТКРЫТ';
+    message.textContent='МЕХАНИЧЕСКАЯ БЛОКИРОВКА СНЯТА. МОДУЛЬ ГОТОВ К ПЕРЕХОДУ НА ЭТАП 2.';
+    message.className='message ok';
+    unlock.textContent='СИСТЕМА РАЗБЛОКИРОВАНА';
+  });
+
+  reset.addEventListener('click',()=>{
+    pos=[0,0,0,0,0]; errors=4;time=50;solved=false;
+    errorsEl.textContent=errors;timerEl.textContent=time+' s';
+    unlock.textContent='РАЗБЛОКИРОВАТЬ';
+    clearInterval(timerId);
+    timerId=setInterval(()=>{if(!solved&&time>0){time--;timerEl.textContent=time+' s';}},1000);
+    render();
+  });
+
+  build();
+  timerId=setInterval(()=>{if(!solved&&time>0){time--;timerEl.textContent=time+' s';}},1000);
+})();
 </script>
 </body>
 </html>
