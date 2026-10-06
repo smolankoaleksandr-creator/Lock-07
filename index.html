@@ -26,7 +26,7 @@ button{font:inherit}
 linear-gradient(#101314 1px,transparent 1px),
 linear-gradient(90deg,#101314 1px,transparent 1px);
 background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
-.sliders{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;max-width:650px;margin:auto;position:relative;z-index:2}
+.sliders{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;max-width:700px;margin:auto;position:relative;z-index:2}
 .slider-wrap{position:relative;min-width:0}
 .track{height:300px;border:1px solid #646a68;background:#111516;position:relative;overflow:visible}
 .track:before,.track:after{content:"";position:absolute;left:0;right:0;height:1px;background:#2c3130}
@@ -46,15 +46,18 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 .col-label{text-align:center;margin-top:10px;font-size:10px;color:#b9bfbd;letter-spacing:1px}
 .pos{text-align:center;margin-top:4px;font-size:10px;color:#747b78}
 .link-row{height:40px;position:relative;max-width:650px;margin:-14px auto 0;z-index:1}
-.link-line{position:absolute;height:4px;background:#555b59;top:18px;left:12.5%;right:37.5%}
+.link-line{position:absolute;height:4px;background:#555b59;top:18px;left:10%;width:20%}
 .link-line.reverse{background:#696e6c}
 .link-line:before,.link-line:after{content:"⚙";position:absolute;top:50%;transform:translateY(-50%);font-family:Arial,sans-serif;color:#818785;background:#080a0b;font-size:18px}
 .link-line:before{left:-10px}.link-line:after{right:-10px}
-.link-label{position:absolute;top:27px;left:31%;font-size:8px;color:#727976;letter-spacing:1px}
-.link-row2{height:44px;position:relative;max-width:650px;margin:-6px auto 0;z-index:1}
-.link2{position:absolute;left:37.5%;right:12.5%;top:20px;height:4px;background:#555b59}
+.link-label{position:absolute;top:27px;left:10%;font-size:8px;color:#727976;letter-spacing:1px}
+.link-row2{height:44px;position:relative;max-width:700px;margin:-6px auto 0;z-index:1}
+.link2{position:absolute;left:30%;width:20%;top:20px;height:4px;background:#555b59}
+.link3{position:absolute;left:50%;width:20%;top:20px;height:4px;background:#555b59}
 .link2:before,.link2:after{content:"⚙";position:absolute;top:50%;transform:translateY(-50%);font-family:Arial,sans-serif;color:#818785;background:#080a0b;font-size:18px}
 .link2:before{left:-10px}.link2:after{right:-10px}
+.link3:before,.link3:after{content:"⚙";position:absolute;top:50%;transform:translateY(-50%);font-family:Arial,sans-serif;color:#818785;background:#080a0b;font-size:18px}
+.link3:before{left:-10px}.link3:after{right:-10px}
 .independent{position:absolute;right:7px;top:9px;font-size:8px;color:#8d9491;letter-spacing:1px}
 .result{margin-top:12px;border-top:1px solid #353a38;padding-top:10px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px;color:#b5bbb9}
 .result strong{color:#e9eceb}
@@ -72,7 +75,7 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
  body{padding:7px}.app{padding:10px}.logo{font-size:20px}.ver{font-size:9px}
  .status{grid-template-columns:repeat(2,1fr)}
  .lock-panel{padding:26px 10px 38px}
- .sliders{gap:8px}
+ .sliders{gap:7px}
  .track{height:270px}
  .security-zone{height:36px}
  .slider{width:54px;height:32px}
@@ -86,13 +89,13 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 <div class="app">
   <div class="header">
     <div class="logo">ЗАМОК//07</div>
-    <div class="ver">ПРОМЫШЛЕННАЯ СИСТЕМА / ВЕРСИЯ 3.7<br>ЭЛЕКТРОМЕХАНИЧЕСКИЙ МОДУЛЬ БЕЗОПАСНОСТИ</div>
+    <div class="ver">ПРОМЫШЛЕННАЯ СИСТЕМА / ВЕРСИЯ 3.8<br>ЭЛЕКТРОМЕХАНИЧЕСКИЙ МОДУЛЬ БЕЗОПАСНОСТИ</div>
   </div>
   <div class="subtitle">МЕХАНИЧЕСКИЙ ВЗЛОМ</div>
   <div class="instruction">
     Сдвигайте ползунки по вертикальным направляющим. <b>Белая рамка WORK / SET HERE — точная рабочая позиция.</b>
     Когда ползунок установлен правильно, он получает отметку ✓. Связанные цилиндры двигаются вместе.
-    Кнопка «РАЗБЛОКИРОВАТЬ» станет активной только после правильного положения всех четырёх.
+    Кнопка «РАЗБЛОКИРОВАТЬ» станет активной только после правильного положения всех пяти.
   </div>
 
   <div class="status">
@@ -100,7 +103,7 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
     <div class="cell">ЭТАП<b>1 / 2</b></div>
     <div class="cell">ОШИБКИ<b id="errors">● ● ● ●</b></div>
     <div class="cell">ВРЕМЯ<b id="time">00:50</b></div>
-    <div class="cell">ЦИЛИНДРЫ<b>04</b></div>
+    <div class="cell">ЦИЛИНДРЫ<b>05</b></div>
   </div>
 
   <div class="module">
@@ -110,7 +113,7 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
     </div>
 
     <div class="lock-panel">
-      <div class="independent">CYL-04 / INDEPENDENT</div>
+      <div class="independent">CYL-05 / INDEPENDENT</div>
 
       <div class="sliders" id="sliders">
         <div class="slider-wrap">
@@ -148,6 +151,15 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
           </div>
           <div class="col-label">CYLINDER 04</div><div class="pos" id="pos4">POS 00</div>
         </div>
+
+        <div class="slider-wrap">
+          <div class="track" data-track="5"><i class="slot-line" style="top:0.0%"></i><i class="slot-line" style="top:20.0%"></i><i class="slot-line" style="top:40.0%"></i><i class="slot-line" style="top:60.0%"></i><i class="slot-line" style="top:80.0%"></i><i class="slot-line" style="top:100.0%"></i>
+            <div class="security-zone" data-work="4"><span>WORK / SET HERE</span></div>
+            <div class="ticks"><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i><i class="tick"></i></div>
+            <div class="slider" data-id="5"><div class="grip"></div></div>
+          </div>
+          <div class="col-label">CYLINDER 05</div><div class="pos" id="pos5">POS 00</div>
+        </div>
       </div>
 
       <div class="link-row">
@@ -155,15 +167,16 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
       </div>
       <div class="link-row2">
         <div class="link2"></div>
+        <div class="link3"></div>
       </div>
 
       <div class="result">
-        <span>ВЫРАВНИВАНИЕ: <strong id="aligned">0 / 4</strong></span>
-        <span id="linkState">ПРИВОДЫ: C1↔C2 / C2↔C3</span>
+        <span>ВЫРАВНИВАНИЕ: <strong id="aligned">0 / 5</strong></span>
+        <span id="linkState">ПРИВОДЫ: C1↔C2 / C2↔C3 / C3↔C4</span>
       </div>
     </div>
 
-    <div class="message" id="message">Нажимайте на ползунок или по дорожке, чтобы сместить цилиндр на один сектор. Связанные элементы сдвинутся автоматически.</div>
+    <div class="message" id="message">Нажимайте на ползунок или по дорожке, чтобы сместить цилиндр на один сектор. Связанные элементы сдвинутся автоматически. Пятый цилиндр независим.</div>
 
     <div class="actions">
       <button id="unlock" disabled>РАЗБЛОКИРОВАТЬ</button>
@@ -178,31 +191,34 @@ background-size:32px 32px;padding:30px 22px 42px;overflow:hidden}
 <div class="overlay" id="overlay">
   <div class="modal">
     <h2>ДОСТУП РАЗРЕШЁН</h2>
-    <p>Все четыре цилиндра находятся в рабочей зоне. Электромеханический модуль разблокирован.</p>
+    <p>Все пять цилиндров находятся в рабочей зоне. Электромеханический модуль разблокирован.</p>
     <button id="close">ЗАКРЫТЬ</button>
   </div>
 </div>
 
 <script>
 const N=6;
-const state={pos:[0,0,0,0],moves:0,errors:4,time:50,finished:false,timer:null};
+const state={pos:[0,0,0,0,0],moves:0,errors:4,time:50,finished:false,timer:null};
 
-const target=[2,1,3,2];
+// Единственная рабочая конфигурация для теста. Все связи работают по модулю 6.
+const target=[3,2,2,5,4];
 
-// Механические связи для первого теста.
-// Клик/шаг CYL-01: C1 +1, C2 -1
-// Клик/шаг CYL-02: C2 +1, C1 +1, C3 +1
-// Клик/шаг CYL-03: C3 +1, C2 -1
-// CYL-04 полностью независим.
+// Механические связи v1.3.
+// C1 -> C1 +1, C2 -1
+// C2 -> C1 +1, C2 +1, C3 +1
+// C3 -> C2 -1, C3 +1, C4 +1
+// C4 -> C3 -1, C4 +1
+// C5 полностью независим.
 const actions={
-  1:[1,-1,0,0],
-  2:[1,1,1,0],
-  3:[0,-1,1,0],
-  4:[0,0,0,1]
+  1:[1,-1,0,0,0],
+  2:[1,1,1,0,0],
+  3:[0,-1,1,1,0],
+  4:[0,0,-1,1,0],
+  5:[0,0,0,0,1]
 };
 
-const sliderEls=[1,2,3,4].map(i=>document.querySelector('.slider[data-id="'+i+'"]'));
-const tracks=[1,2,3,4].map(i=>document.querySelector('.track[data-track="'+i+'"]'));
+const sliderEls=[1,2,3,4,5].map(i=>document.querySelector('.slider[data-id="'+i+'"]'));
+const tracks=[1,2,3,4,5].map(i=>document.querySelector('.track[data-track="'+i+'"]'));
 
 function clamp(v){return ((v%N)+N)%N}
 function setPos(i,v){state.pos[i]=clamp(v)}
@@ -227,7 +243,7 @@ function render(){
   const trackH=tracks[0].clientHeight;
   const sliderH=sliderEls[0].offsetHeight;
   const travel=Math.max(1,trackH-sliderH-4);
-  for(let i=0;i<4;i++){
+  for(let i=0;i<5;i++){
     const y=(state.pos[i]/(N-1))*travel+2;
     sliderEls[i].style.top=y+'px';
     document.getElementById('pos'+(i+1)).textContent='POS '+String(state.pos[i]).padStart(2,'0');
@@ -237,24 +253,23 @@ function render(){
   }
   document.getElementById('moveCount').textContent='ДЕЙСТВИЙ: '+state.moves;
   const aligned=state.pos.filter((v,i)=>v===target[i]).length;
-  document.getElementById('aligned').textContent=aligned+' / 4';
+  document.getElementById('aligned').textContent=aligned+' / 5';
   const unlock=document.getElementById('unlock');
-  unlock.disabled=aligned!==4;
-  unlock.classList.toggle('ready',aligned===4);
-  const linked=state.pos[0]!==state.pos[1] || state.pos[1]!==state.pos[2] ? 'ПРИВОДЫ: СВЯЗАНЫ' : 'ПРИВОДЫ: СВЯЗАНЫ';
-  document.getElementById('linkState').textContent=linked+' / C4 НЕЗАВИСИМ';
+  unlock.disabled=aligned!==5;
+  unlock.classList.toggle('ready',aligned===5);
+  document.getElementById('linkState').textContent='ПРИВОДЫ: C1↔C2 / C2↔C3 / C3↔C4 / C5 НЕЗАВИСИМ';
 }
 
 function step(id){
   if(state.finished)return;
   const d=actions[id];
-  for(let i=0;i<4;i++) setPos(i,state.pos[i]+d[i]);
+  for(let i=0;i<5;i++) setPos(i,state.pos[i]+d[i]);
   state.moves++;
   render();
   const aligned=state.pos.filter((v,i)=>v===target[i]).length;
-  document.getElementById('message').textContent='МЕХАНИЗМ: CYL-0'+id+' активирован. '+aligned+'/4 цилиндра в рабочей зоне.';
-  if(aligned===4){
-    document.getElementById('message').textContent='✓ ВСЕ 4 ЦИЛИНДРА В ЗОНЕ WORK. РАЗБЛОКИРОВАТЬ ДОСТУПНО.';
+  document.getElementById('message').textContent='МЕХАНИЗМ: CYL-0'+id+' активирован. '+aligned+'/5 цилиндров в рабочей зоне.';
+  if(aligned===5){
+    document.getElementById('message').textContent='✓ ВСЕ 5 ЦИЛИНДРОВ В ЗОНЕ WORK. РАЗБЛОКИРОВАТЬ ДОСТУПНО.';
   }
 }
 
@@ -279,7 +294,7 @@ function check(){
 }
 
 function reset(){
-  state.pos=[0,0,0,0];state.moves=0;state.errors=4;state.time=50;state.finished=false;
+  state.pos=[0,0,0,0,0];state.moves=0;state.errors=4;state.time=50;state.finished=false;
   document.getElementById('errors').textContent='● ● ● ●';
   document.getElementById('time').textContent='00:50';
   document.getElementById('state').textContent='АКТИВНО';
@@ -331,7 +346,7 @@ document.getElementById('unlock').addEventListener('click',check);
 document.getElementById('reset').addEventListener('click',reset);
 document.getElementById('close').addEventListener('click',()=>document.getElementById('overlay').style.display='none');
 document.getElementById('diagnostic').addEventListener('click',()=>{
-  document.getElementById('message').textContent='ДИАГНОСТИКА: C1='+state.pos[0]+' C2='+state.pos[1]+' C3='+state.pos[2]+' C4='+state.pos[3]+' / связи: C1↔C2, C2↔C3 / C4 независим.';
+  document.getElementById('message').textContent='ДИАГНОСТИКА: C1='+state.pos[0]+' C2='+state.pos[1]+' C3='+state.pos[2]+' C4='+state.pos[3]+' C5='+state.pos[4]+' / связи: C1↔C2, C2↔C3, C3↔C4 / C5 независим.';
 });
 window.addEventListener('resize',render);
 render();startTimer();
