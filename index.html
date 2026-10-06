@@ -1,114 +1,65 @@
-<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>LOCK//07</title>
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ЗАМОК//07 — Взлом</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:#050606;color:#eee;font-family:Courier New,monospace;overflow:hidden}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#020303;color:#dfe3e3;font-family:"Courier New",monospace;overflow:hidden}
 body{display:flex;align-items:center;justify-content:center}
-.scan{position:fixed;inset:0;pointer-events:none;opacity:.045;background:repeating-linear-gradient(#fff 0 1px,transparent 1px 5px)}
-.machine{width:min(1000px,96vw);height:min(700px,94vh);background:#0b0d0d;border:1px solid #555;box-shadow:0 0 0 7px #030404,0 25px 80px #000;padding:18px}
-.head{height:62px;border:1px solid #444;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
-.logo{font-size:20px;font-weight:bold;letter-spacing:5px}.sub{font-size:10px;color:#777;letter-spacing:2px}
-.main{height:calc(100% - 80px);margin-top:18px;display:grid;grid-template-columns:1fr 260px;gap:18px}
-.panel{border:1px solid #3f4444;background:#090b0b;position:relative;padding:22px}
-.label{font-size:10px;color:#777;letter-spacing:2px}.title{font-size:19px;letter-spacing:3px;margin:8px 0 18px}
-.instruction{font-size:11px;color:#999;line-height:1.6;border-block:1px solid #292d2d;padding:10px 0}
-.lock{margin:25px auto 20px;width:min(470px,90%);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.tumbler{height:180px;border:1px solid #555;background:#101313;position:relative;overflow:hidden;cursor:pointer}
-.tumbler:hover{border-color:#aaa}.rail{position:absolute;left:50%;top:15px;bottom:15px;width:3px;background:#555;transform:translateX(-50%)}
-.pin{position:absolute;left:50%;width:44px;height:22px;background:#aaa;border:2px solid #eee;transform:translate(-50%,-50%);transition:top .15s}
-.pin:after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;background:#111;transform:translate(-50%,-50%)}
-.target{position:absolute;left:0;right:0;top:38%;height:45px;border-block:1px dashed #777;pointer-events:none}
-.num{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:9px;color:#666}
-.status{text-align:center;font-size:11px;color:#aaa;min-height:17px}
-.buttons{display:flex;gap:8px;justify-content:center;margin-top:14px}
-button{font:inherit;color:#bbb;background:#141717;border:1px solid #505555;padding:10px 18px;cursor:pointer}
-button:hover{color:#fff;border-color:#aaa}button:active{transform:translateY(1px)}
-.side{border:1px solid #3f4444;background:#090b0b;padding:18px}
-h2{font-size:12px;letter-spacing:3px;margin:0 0 18px}.stat{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #252929;font-size:11px}.v{color:#eee}
-.attempts{letter-spacing:4px}.log{margin-top:20px;height:170px;overflow:hidden;font-size:9px;line-height:1.8;color:#666}
-.help{position:absolute;bottom:16px;left:18px;right:18px;font-size:9px;color:#555;line-height:1.5}
-.overlay{position:absolute;inset:0;background:rgba(2,3,3,.96);display:none;align-items:center;justify-content:center;text-align:center;z-index:10}
-.overlay.on{display:flex}.result{border:1px solid #777;padding:35px;min-width:65%}.big{font-size:27px;letter-spacing:5px}.result p{font-size:11px;color:#999}
-@media(max-width:700px){.machine{height:96vh;padding:9px}.head{height:54px}.main{grid-template-columns:1fr}.side{display:none}.panel{padding:14px}.tumbler{height:150px}.lock{margin-top:18px}}
-</style>
-</head>
-<body>
-<div class="scan"></div>
-<div class="machine">
-<header class="head"><div class="logo">LOCK//07</div><div class="sub">MANUAL OVERRIDE / REV. 3.7</div></header>
-<div class="main">
-<section class="panel">
-<div class="label">ELECTROMECHANICAL SECURITY CORE</div>
-<div class="title">ALIGN THE LOCK CYLINDERS</div>
-<div class="instruction">TAP EACH CYLINDER TO MOVE ITS PIN. ALIGN ALL FOUR PINS WITH THE WHITE SECURITY BAND, THEN ENGAGE OVERRIDE.</div>
-<div class="lock" id="lock"></div>
-<div class="status" id="status">SYSTEM WAITING FOR INPUT</div>
-<div class="buttons"><button id="open">ENGAGE OVERRIDE</button><button id="reset">RESET</button></div>
-<div class="overlay" id="overlay"><div class="result"><div class="big" id="resultTitle"></div><p id="resultText"></p><button id="again">REINITIALIZE</button></div></div>
-<div class="help">MECHANISM: EACH CYLINDER HAS 6 POSITIONS. CORRECT ALIGNMENT IS REQUIRED.</div>
-</section>
-<aside class="side">
-<h2>SYSTEM DIAGNOSTICS</h2>
-<div class="stat"><span>SECURITY</span><span class="v">ACTIVE</span></div>
-<div class="stat"><span>DIFFICULTY</span><span class="v" id="difficulty">NORMAL</span></div>
-<div class="stat"><span>ATTEMPTS</span><span class="v attempts" id="attempts">● ● ● ●</span></div>
-<div class="stat"><span>TIME</span><span class="v" id="time">00:35</span></div>
-<div class="stat"><span>CYLINDERS</span><span class="v">04</span></div>
-<div class="log" id="log"></div>
-</aside>
-</div>
-</div>
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.04;background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 5px)}
+.shell{width:min(1080px,96vw);height:min(760px,95vh);padding:16px;background:linear-gradient(145deg,#141717,#070808);border:1px solid #555;box-shadow:0 0 0 7px #030404,0 25px 90px #000}
+.header{height:64px;border:1px solid #464b4b;background:#090b0b;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.brand{font-size:19px;font-weight:bold;letter-spacing:5px;color:#fff}.serial{font-size:9px;color:#666;letter-spacing:2px}
+.layout{height:calc(100% - 82px);margin-top:18px;display:grid;grid-template-columns:1fr 250px;gap:16px}
+.screen,.side{border:1px solid #454a4a;background:#080a0a}.screen{padding:20px;position:relative;overflow:hidden}.side{padding:16px;position:relative}
+.label{font-size:9px;color:#717878;letter-spacing:2px}.title{font-size:18px;color:#e7ebeb;letter-spacing:2px;margin:7px 0 13px}
+.phase{display:flex;gap:5px;margin-bottom:14px}.phase span{height:4px;flex:1;background:#292d2d}.phase .on{background:#eee}.phase .done{background:#777}
+.notice{font-size:10px;line-height:1.55;color:#929999;border-block:1px solid #282c2c;padding:9px 0}
+.lockArea{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;max-width:500px;margin:18px auto 10px}
+.cyl{height:190px;border:1px solid #4b5050;background:linear-gradient(90deg,#0d1010,#151818,#0d1010);position:relative;cursor:pointer;overflow:hidden}
+.cyl:before{content:"";position:absolute;inset:9px 25%;border:1px solid #343939}.rail{position:absolute;left:50%;top:12px;bottom:12px;width:2px;background:#4d5252;transform:translateX(-50%)}
+.band{position:absolute;left:0;right:0;top:35%;height:52px;border-block:1px dashed #a4aaaa;background:#fff00000}.pin{position:absolute;left:50%;width:48px;height:24px;background:#8c9292;border:2px solid #e8ecec;transform:translate(-50%,-50%);transition:top .12s;box-shadow:0 0 8px #fff2}
+.pin:after{content:"";position:absolute;width:7px;height:7px;background:#171919;left:50%;top:50%;transform:translate(-50%,-50%)}.num{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:8px;color:#686f6f}
+.cyl.aligned{border-color:#aaa}.cyl.aligned .pin{background:#eee;box-shadow:0 0 12px #fff4}
+.status{text-align:center;min-height:18px;font-size:10px;color:#aeb4b4}.controls{display:flex;justify-content:center;gap:8px;margin-top:10px}
+button{font:inherit;color:#bbb;background:#121515;border:1px solid #555b5b;cursor:pointer;padding:10px 18px;font-size:10px}button:hover{border-color:#aaa;color:#fff}button:active{transform:translateY(1px)}
+.side h2{font-size:11px;letter-spacing:3px;margin:0 0 16px;color:#ddd}.stat{display:flex;justify-content:space-between;border-bottom:1px solid #242828;padding:10px 0;font-size:10px}.value{color:#eee}.dots{letter-spacing:3px}
+.log{font-size:8px;line-height:1.8;color:#646b6b;margin-top:18px;height:155px;overflow:hidden}.sideBottom{position:absolute;left:16px;right:16px;bottom:16px;border-top:1px solid #272b2b;padding-top:10px;font-size:8px;color:#555;line-height:1.6}
+.circuit{display:none;margin:18px auto 0;max-width:600px}.circuit.show{display:block}.circuitInfo{text-align:center;font-size:10px;color:#8e9595;line-height:1.6}
+.nodeRow{display:flex;align-items:center;justify-content:center;margin:22px 0}.node{width:58px;height:58px;border:1px solid #555;background:#111414;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer}
+.node.selected{background:#eee;color:#080808;border-color:#fff}.wire{width:55px;height:4px;background:#3d4242;position:relative}.wire.live{background:#eee;box-shadow:0 0 8px #fff4}.circuitHint{text-align:center;font-size:9px;color:#666}
+.overlay{position:absolute;inset:0;background:#020303f7;display:none;align-items:center;justify-content:center;text-align:center;z-index:20}.overlay.show{display:flex}
+.result{border:1px solid #777;background:#0b0d0d;padding:34px 28px;min-width:min(600px,85%)}.big{font-size:25px;letter-spacing:5px;color:#fff}.result p{font-size:10px;color:#969d9d;line-height:1.7}
+@media(max-width:700px){.shell{width:96vw;height:96vh;padding:9px}.header{height:54px}.layout{grid-template-columns:1fr;height:calc(100% - 72px);margin-top:10px}.side{display:none}.screen{padding:14px}.cyl{height:165px}.lockArea{gap:6px}.title{font-size:15px}}
+</style></head><body>
+<div class="shell"><header class="header"><div class="brand">ЗАМОК//07</div><div class="serial">ПРОМЫШЛЕННАЯ СИСТЕМА / ВЕРСИЯ 3.7</div></header>
+<div class="layout"><section class="screen">
+<div class="label">ЭЛЕКТРОМЕХАНИЧЕСКИЙ МОДУЛЬ БЕЗОПАСНОСТИ</div><div class="title" id="title">МЕХАНИЧЕСКИЙ ВЗЛОМ</div>
+<div class="phase"><span id="p1" class="on"></span><span id="p2"></span><span id="p3"></span><span id="p4"></span></div>
+<div class="notice" id="notice">Поверните каждый цилиндр. Белая зона — рабочее положение. После выравнивания нажмите «РАЗБЛОКИРОВАТЬ».</div>
+<div class="lockArea" id="lockArea"></div>
+<div class="circuit" id="circuit"><div class="circuitInfo">ВНУТРЕННИЙ КОНТУР ПИТАНИЯ<br>Замкните цепь от входа к выходу. Нажимайте узлы строго по порядку.</div><div class="nodeRow" id="nodeRow"></div><div class="circuitHint">СХЕМА: ВХОД → ● → ● → ● → ВЫХОД</div></div>
+<div class="status" id="status">СИСТЕМА ГОТОВА К ВЗЛОМУ</div><div class="controls"><button id="action">РАЗБЛОКИРОВАТЬ</button><button id="reset">СБРОС</button></div>
+<div class="overlay" id="overlay"><div class="result"><div class="big" id="resultTitle"></div><p id="resultText"></p><button id="again">ПЕРЕЗАПУСТИТЬ СИСТЕМУ</button></div></div>
+</section><aside class="side"><h2>ДИАГНОСТИКА</h2>
+<div class="stat"><span>СОСТОЯНИЕ</span><span class="value">АКТИВНО</span></div><div class="stat"><span>ЭТАП</span><span class="value" id="stage">1 / 2</span></div>
+<div class="stat"><span>ОШИБКИ</span><span class="value dots" id="attempts">● ● ● ●</span></div><div class="stat"><span>ВРЕМЯ</span><span class="value" id="time">00:50</span></div>
+<div class="stat"><span>ЦИЛИНДРЫ</span><span class="value">04</span></div><div class="log" id="log"></div>
+<div class="sideBottom">ПРЕДУПРЕЖДЕНИЕ: ПОВТОРНАЯ ОШИБКА ВЫЗОВЕТ АВАРИЙНУЮ БЛОКИРОВКУ.</div></aside></div></div>
 <script>
-(function(){
-"use strict";
-const lockEl=document.getElementById("lock"),statusEl=document.getElementById("status"),attemptEl=document.getElementById("attempts"),timeEl=document.getElementById("time"),logEl=document.getElementById("log"),overlay=document.getElementById("overlay"),title=document.getElementById("resultTitle"),text=document.getElementById("resultText");
-let pos=[],target=[],attempts=4,time=35,timer=null,over=false;
-
-function log(s){logEl.innerHTML+="> "+s+"<br>";logEl.scrollTop=logEl.scrollHeight}
-function make(){
- pos=[];target=[];over=false;attempts=4;time=35;
- for(let i=0;i<4;i++){pos.push(Math.floor(Math.random()*6));target.push(2+Math.floor(Math.random()*2))}
- render(); logEl.innerHTML="";log("CORE INITIALIZED");log("FOUR CYLINDERS DETECTED");tick();
-}
-function render(){
- lockEl.innerHTML="";
- for(let i=0;i<4;i++){
-  const t=document.createElement("div");t.className="tumbler";t.dataset.i=i;
-  const band=document.createElement("div");band.className="target";
-  const rail=document.createElement("div");rail.className="rail";
-  const pin=document.createElement("div");pin.className="pin";
-  pin.style.top=(16+pos[i]*13)+"%";
-  const num=document.createElement("div");num.className="num";num.textContent="CYLINDER "+(i+1);
-  t.append(band,rail,pin,num);t.onclick=()=>move(i);lockEl.appendChild(t);
- }
- attemptEl.textContent=attempts?"● ".repeat(attempts).trim():"—";
-}
-function move(i){
- if(over)return;
- pos[i]=(pos[i]+1)%6;render();
- const ok=pos.every((p,k)=>p>=2&&p<=3);
- statusEl.textContent=ok?"ALL CYLINDERS ALIGNED — READY":"ADJUST CYLINDERS";
- log("CYLINDER "+(i+1)+" ROTATED");
-}
-function engage(){
- if(over)return;
- const ok=pos.every((p,k)=>p>=2&&p<=3);
- if(ok)win(); else {attempts--;attemptEl.textContent=attempts?"● ".repeat(attempts).trim():"—";statusEl.textContent="OVERRIDE REJECTED";log("MISALIGNMENT / PENALTY");if(attempts<=0)lose()}
-}
-function win(){over=true;clearInterval(timer);title.textContent="ACCESS GRANTED";text.textContent="LOCK MECHANISM DISENGAGED. CONTAINER READY.";overlay.classList.add("on")}
-function lose(){over=true;clearInterval(timer);title.textContent="ACCESS DENIED";text.textContent="SECURITY LOCKOUT. MANUAL RESET REQUIRED.";overlay.classList.add("on")}
-function tick(){
- clearInterval(timer);time=35;timeEl.textContent="00:35";
- timer=setInterval(()=>{if(over)return;time--;timeEl.textContent="00:"+String(Math.max(0,time)).padStart(2,"0");if(time<=0)lose()},1000)
-}
-document.getElementById("open").onclick=engage;
-document.getElementById("reset").onclick=make;
-document.getElementById("again").onclick=()=>{overlay.classList.remove("on");make()};
-make();
-})();
-</script>
-</body>
-</html>
+(()=>{"use strict";
+const $=id=>document.getElementById(id),lock=$("lockArea"),circ=$("circuit"),row=$("nodeRow"),status=$("status"),att=$("attempts"),tm=$("time"),logEl=$("log"),title=$("title"),notice=$("notice"),action=$("action"),overlay=$("overlay"),rt=$("resultTitle"),rx=$("resultText");
+let pos=[],targets=[],attempts=4,time=50,timer,stage=1,over=false,seq=0;
+function log(x){logEl.innerHTML+="> "+x+"<br>";logEl.scrollTop=logEl.scrollHeight}
+function attemptsUI(){att.textContent=attempts?"● ".repeat(attempts).trim():"—"}
+function render(){lock.innerHTML="";for(let i=0;i<4;i++){let c=document.createElement("div");c.className="cyl"+(pos[i]>=targets[i]&&pos[i]<=targets[i]+1?" aligned":"");c.innerHTML='<div class="rail"></div><div class="band"></div><div class="pin"></div><div class="num">ЦИЛИНДР '+(i+1)+"</div>";c.querySelector(".pin").style.top=(10+pos[i]*13)+"%";c.onclick=()=>{if(over)return;pos[i]=(pos[i]+1)%7;render();log("ЦИЛИНДР "+(i+1)+" ПОВЁРНУТ")};lock.appendChild(c)}}
+function start(){clearInterval(timer);stage=1;over=false;attempts=4;time=50;seq=0;pos=[];targets=[];for(let i=0;i<4;i++){pos.push(Math.floor(Math.random()*7));targets.push(2+Math.floor(Math.random()*2))}
+$("p1").className="on";$("p2").className="";title.textContent="МЕХАНИЧЕСКИЙ ВЗЛОМ";notice.textContent="Поверните каждый цилиндр. Белая зона — рабочее положение. После выравнивания нажмите «РАЗБЛОКИРОВАТЬ».";lock.style.display="grid";circ.classList.remove("show");action.textContent="РАЗБЛОКИРОВАТЬ";status.textContent="СИСТЕМА ГОТОВА К ВЗЛОМУ";logEl.innerHTML="";log("СИСТЕМА ИНИЦИАЛИЗИРОВАНА");log("МЕХАНИЧЕСКИЙ БЛОК ОБНАРУЖЕН");render();attemptsUI();tick()}
+function fail(){attempts--;attemptsUI();status.textContent="ОШИБКА / ДОСТУП НЕ ПОДТВЕРЖДЁН";log("ОТКАЗ / ШТРАФ");if(attempts<=0)lose()}
+function startCircuit(){stage=2;$("p1").className="done";$("p2").className="on";title.textContent="ОБХОД ЭЛЕКТРОННОЙ ЗАЩИТЫ";notice.textContent="Соедините вход с выходом. Нажимайте узлы строго по порядку. Ошибка сбрасывает цепь.";lock.style.display="none";circ.classList.add("show");action.textContent="ЗАМКНУТЬ КОНТУР";status.textContent="ЦЕПЬ РАЗОМКНУТА";row.innerHTML="";seq=0;for(let i=0;i<4;i++){let n=document.createElement("div");n.className="node";n.textContent=i+1;n.onclick=()=>node(i);row.appendChild(n);if(i<3){let w=document.createElement("div");w.className="wire";w.id="w"+i;row.appendChild(w)}}log("МЕХАНИЧЕСКИЙ БЛОК СНЯТ");log("ВКЛЮЧЕН ВНУТРЕННИЙ КОНТУР")}
+function node(i){if(over)return;if(i===seq){row.children[i*2].classList.add("selected");if(i>0)$("w"+(i-1)).classList.add("live");seq++;log("КОНТАКТ "+(i+1)+" ПОДТВЕРЖДЁН");if(seq===4)status.textContent="КОНТУР СОБРАН — ГОТОВ К ЗАМЫКАНИЮ"}else{log("НЕВЕРНЫЙ КОНТАКТ");fail();seq=0;document.querySelectorAll(".node").forEach(n=>n.classList.remove("selected"));document.querySelectorAll(".wire").forEach(w=>w.classList.remove("live"))}}
+function engage(){if(over)return;if(stage===1){if(pos.every((p,i)=>p>=targets[i]&&p<=targets[i]+1))startCircuit();else fail()}else if(seq===4)win();else fail()}
+function win(){over=true;clearInterval(timer);rt.textContent="ДОСТУП РАЗРЕШЁН";rx.textContent="Защитный контур отключён. Механизм замка разблокирован.";overlay.classList.add("show")}
+function lose(){over=true;clearInterval(timer);rt.textContent="СИСТЕМА ЗАБЛОКИРОВАНА";rx.textContent="Слишком много ошибок. Требуется ручной сброс замка.";overlay.classList.add("show")}
+function tick(){tm.textContent="00:"+String(time).padStart(2,"0");timer=setInterval(()=>{if(over)return;time--;tm.textContent="00:"+String(Math.max(0,time)).padStart(2,"0");if(time<=0)lose()},1000)}
+action.onclick=engage;$("reset").onclick=start;$("again").onclick=()=>{overlay.classList.remove("show");start()};start();
+})()
+</script></body></html>
