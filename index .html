@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ЗАМОК//07 — Взлом v0.3</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#020303;color:#dfe3e3;font-family:monospace;overflow:hidden}
+body{display:flex;align-items:center;justify-content:center}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 5px)}
+button{font:inherit;color:#ccc;background:#111414;border:1px solid #555;padding:10px 16px;cursor:pointer}button:hover{color:#fff;border-color:#aaa}
+.shell{width:min(1080px,96vw);height:min(760px,95vh);padding:15px;background:linear-gradient(145deg,#151818,#070808);border:1px solid #555;box-shadow:0 0 0 7px #030404,0 25px 90px #000}
+.header{height:62px;border:1px solid #454a4a;background:#090b0b;padding:0 18px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:19px;font-weight:bold;letter-spacing:5px;color:#fff}.serial{font-size:9px;color:#666;letter-spacing:2px}
+.layout{height:calc(100% - 80px);margin-top:18px;display:grid;grid-template-columns:1fr 245px;gap:15px}
+.screen,.side{border:1px solid #424848;background:#080a0a}.screen{padding:18px;position:relative;overflow:hidden}.side{padding:15px;position:relative}
+.label{font-size:9px;color:#707777;letter-spacing:2px}.title{font-size:17px;letter-spacing:2px;color:#edf0f0;margin:7px 0 11px}
+.phase{display:flex;gap:5px;margin-bottom:12px}.phase i{display:block;height:4px;flex:1;background:#292d2d}.phase .on{background:#eee}.phase .done{background:#777}
+.notice{font-size:10px;line-height:1.5;color:#969d9d;border-block:1px solid #292d2d;padding:8px 0}
+.cylGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:570px;margin:14px auto 9px}
+.cyl{height:205px;background:linear-gradient(90deg,#0c0f0f,#151818,#0c0f0f);border:1px solid #4c5252;position:relative;overflow:hidden}
+.cylHead{text-align:center;font-size:8px;color:#686f6f;padding-top:7px}.wheel{position:absolute;left:50%;top:32px;bottom:31px;width:68px;transform:translateX(-50%);border:1px solid #3e4444;border-radius:35px;background:#0d1010;cursor:pointer}
+.wheel:before{content:"";position:absolute;inset:8px;border:1px dashed #5e6464;border-radius:50%}.marker{position:absolute;left:50%;top:4px;width:2px;height:18px;background:#eee;transform:translateX(-50%)}
+.wheelFace{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:42px;height:42px;border:1px solid #777;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:#eee}
+.cylHint{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:7px;color:#555}
+.clues{max-width:680px;margin:8px auto;border:1px solid #383d3d;background:#0b0d0d;padding:9px 12px}.cluesTitle{font-size:8px;color:#777;letter-spacing:2px;margin-bottom:5px}
+.cluesGrid{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;font-size:9px;color:#b0b6b6}.clue{padding:2px 0}.clue b{color:#eee}
+.bottom{display:flex;justify-content:center;gap:8px;margin-top:9px}.bottom button{font-size:9px}
+.stage2{display:none}.stage2.show{display:block}.stage1.hide{display:none}
+.circuitInfo{text-align:center;font-size:9px;line-height:1.5;color:#929999;margin:12px 0}.grid{width:min(430px,90%);aspect-ratio:1;margin:10px auto;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;background:#202424;padding:3px}
+.tile{background:#0e1111;border:1px solid #454b4b;cursor:pointer}.tile svg{width:100%;height:100%}.tile:hover{border-color:#aaa}
+.endpoint{display:flex;justify-content:space-between;width:min(430px,90%);margin:7px auto;font-size:8px;color:#777}.endpoint span{border:1px solid #444;padding:4px 7px}.endpoint .active{color:#eee;border-color:#888}
+.status{text-align:center;min-height:16px;font-size:9px;color:#aeb4b4;margin-top:5px}
+.side h2{font-size:11px;letter-spacing:3px;margin:0 0 14px;color:#ddd}.stat{display:flex;justify-content:space-between;border-bottom:1px solid #252929;padding:9px 0;font-size:9px}.value{color:#eee}.dots{letter-spacing:3px}
+.log{font-size:8px;line-height:1.8;color:#646b6b;margin-top:17px;height:180px;overflow:hidden}.tip{position:absolute;left:15px;right:15px;bottom:15px;border-top:1px solid #292d2d;padding-top:9px;font-size:8px;color:#555;line-height:1.5}
+.overlay{position:absolute;inset:0;background:#020303f7;display:none;align-items:center;justify-content:center;text-align:center;z-index:20}.overlay.show{display:flex}
+.result{border:1px solid #777;background:#0b0d0d;padding:32px 25px;min-width:min(600px,85%)}.big{font-size:24px;letter-spacing:4px;color:#fff}.result p{font-size:10px;color:#969d9d;line-height:1.7}
+@media(max-width:700px){.shell{width:96vw;height:96vh;padding:8px}.header{height:52px}.layout{grid-template-columns:1fr;height:calc(100% - 64px);margin-top:10px}.side{display:none}.screen{padding:12px}.cyl{height:174px}.wheel{width:58px}.cluesGrid{grid-template-columns:1fr;font-size:8px}.title{font-size:14px}.grid{width:min(360px,94vw)}}
+</style></head>
+<body><div class="shell">
+<header class="header"><div class="brand">ЗАМОК//07</div><div class="serial">СИСТЕМА ДОСТУПА / ВЕРСИЯ 0.3</div></header>
+<div class="layout"><section class="screen">
+<div class="label">ЭЛЕКТРОМЕХАНИЧЕСКИЙ МОДУЛЬ БЕЗОПАСНОСТИ</div><div class="title" id="title">ЛОГИЧЕСКИЙ ВЗЛОМ</div>
+<div class="phase"><i id="p1" class="on"></i><i id="p2"></i><i id="p3"></i><i id="p4"></i></div>
+<div class="notice" id="notice">Положение цилиндров не показывается напрямую. Используйте диагностические подсказки и найдите подходящую комбинацию.</div>
+<div id="stage1">
+<div class="cylGrid" id="cylGrid"></div><div class="clues"><div class="cluesTitle">ДИАГНОСТИЧЕСКИЕ ДАННЫЕ</div><div class="cluesGrid" id="clues"></div></div></div>
+<div class="stage2" id="stage2"><div class="circuitInfo">ВТОРОЙ КОНТУР: ПОВЕРНИТЕ ПЛИТКИ ТАК, ЧТОБЫ ПИТАНИЕ ПРОШЛО ОТ ВХОДА К ВЫХОДУ.</div><div class="endpoint"><span class="active">ВХОД ◉</span><span>ВЫХОД ◉</span></div><div class="grid" id="grid"></div></div>
+<div class="status" id="status">СИСТЕМА ГОТОВА</div><div class="bottom"><button id="action">ПРОВЕРИТЬ КОМБИНАЦИЮ</button><button id="reset">СБРОС</button></div>
+<div class="overlay" id="overlay"><div class="result"><div class="big" id="resultTitle"></div><p id="resultText"></p><button id="again">ПЕРЕЗАПУСТИТЬ</button></div></div>
+</section>
+<aside class="side"><h2>ДИАГНОСТИКА</h2><div class="stat"><span>СОСТОЯНИЕ</span><span class="value">АКТИВНО</span></div><div class="stat"><span>ЭТАП</span><span class="value" id="stage">1 / 2</span></div><div class="stat"><span>ОШИБКИ</span><span class="value dots" id="attempts">● ● ●</span></div><div class="stat"><span>ВРЕМЯ</span><span class="value" id="time">01:20</span></div><div class="stat"><span>ЦИЛИНДРЫ</span><span class="value">04</span></div><div class="log" id="log"></div><div class="tip">СОВЕТ: СИСТЕМА НЕ ГОВОРИТ, КАКОЙ ЦИЛИНДР НЕВЕРЕН. АНАЛИЗИРУЙТЕ ПОДСКАЗКИ.</div></aside>
+</div></div>
+<script>
+(()=>{"use strict";
+const $=x=>document.getElementById(x),grid=$("cylGrid"),clues=$("clues"),s1=$("stage1"),s2=$("stage2"),cg=$("grid"),status=$("status"),att=$("attempts"),tm=$("time"),logEl=$("log"),title=$("title"),notice=$("notice"),action=$("action"),overlay=$("overlay"),rt=$("resultTitle"),rx=$("resultText");
+let sol=[],guess=[],attempts=3,time=80,timer,over=false,tiles=[],seqStage=1;
+function log(x){logEl.innerHTML+="> "+x+"<br>";logEl.scrollTop=logEl.scrollHeight}
+function ui(){att.textContent=attempts?"● ".repeat(attempts).trim():"—"}
+function makeSol(){for(;;){let a=Array.from({length:4},()=>1+Math.floor(Math.random()*8));if(a[0]+a[1]!==9)continue;if(((a[0]+1)%8)+1!==a[2])continue;if(a[3]%2!==1)continue;if(a[1]<=a[3])continue;if(new Set(a).size<4)continue;return a}}
+function renderCyl(){grid.innerHTML="";for(let i=0;i<4;i++){let c=document.createElement("div");c.className="cyl";c.innerHTML='<div class="cylHead">ЦИЛИНДР '+(i+1)+'</div><div class="wheel"><div class="marker"></div><div class="wheelFace">'+guess[i]+'</div></div><div class="cylHint">НАЖМИТЕ ДЛЯ ПОВОРОТА</div>';c.querySelector(".wheel").onclick=()=>{if(over)return;guess[i]=guess[i]%8+1;c.querySelector(".wheelFace").textContent=guess[i];log("ЦИЛИНДР "+(i+1)+" → "+guess[i])};grid.appendChild(c)}}
+function renderClues(){clues.innerHTML="";let a=[["№1 + №2","= 9"],["№3","на 2 позиции по часовой стрелке от №1"],["№4","нечётная позиция"],["№2","правее №4"],["ВСЕ","позиции разные"]];a.forEach((x,i)=>{let d=document.createElement("div");d.className="clue";d.innerHTML="<b>"+(i+1)+".</b> "+x[0]+" "+x[1];clues.appendChild(d)})}
+function fail(){attempts--;ui();status.textContent="ОШИБКА / ДОСТУП НЕ ПОДТВЕРЖДЁН";log("ОТКАЗ / ШТРАФ");if(attempts<=0)lose()}
+function rot(m){return((m<<1)&15)|((m>>3)&1)}
+function svg(m){let s='<svg viewBox="0 0 100 100">',c="#e1e5e5";[[1,50,0,50,50],[2,50,50,100,50],[4,50,50,50,100],[8,50,50,0,50]].forEach(x=>{if(m&x[0])s+='<line x1="'+x[1]+'" y1="'+x[2]+'" x2="'+x[3]+'" y2="'+x[4]+'" stroke="'+c+'" stroke-width="8"/>'});return s+'<circle cx="50" cy="50" r="6" fill="'+c+'"/></svg>'}
+function circuit(){let path=[];for(let r=0;r<4;r++){let cs=[0,1,2,3];if(r%2)cs.reverse();cs.forEach(c=>path.push([r,c]))}let ms=Array(16).fill(0);for(let i=0;i<16;i++){let[r,c]=path[i];if(i){let[pr,pc]=path[i-1];if(pr==r-1)ms[r*4+c]|=1;if(pc==c+1)ms[r*4+c]|=2;if(pr==r+1)ms[r*4+c]|=4;if(pc==c-1)ms[r*4+c]|=8}if(i<15){let[nr,nc]=path[i+1];if(nr==r-1)ms[r*4+c]|=1;if(nc==c+1)ms[r*4+c]|=2;if(nr==r+1)ms[r*4+c]|=4;if(nc==c-1)ms[r*4+c]|=8}}tiles=ms.map(m=>{let x=m,n=Math.floor(Math.random()*4);while(n--)x=rot(x);return{x,sol:m}});cg.innerHTML="";tiles.forEach((t,i)=>{let e=document.createElement("div");e.className="tile";e.innerHTML=svg(t.x);e.onclick=()=>{if(over)return;t.x=rot(t.x);e.innerHTML=svg(t.x)};cg.appendChild(e)})}
+function connected(){let seen=new Set(["0,0"]),q=[[0,0]];while(q.length){let[r,c]=q.shift(),m=tiles[r*4+c].x;[[ -1,0,1,4],[0,1,2,8],[1,0,4,1],[0,-1,8,2]].forEach(([dr,dc,b,o])=>{if(!(m&b))return;let R=r+dr,C=c+dc;if(R<0||R>3||C<0||C>3)return;if(!(tiles[R*4+C].x&o))return;let k=R+","+C;if(!seen.has(k)){seen.add(k);q.push([R,C])}})}return seen.has("3,3")}
+function stage2(){seqStage=2;$("p1").className="done";$("p2").className="on";$("stage").textContent="2 / 2";s1.classList.add("hide");s2.classList.add("show");title.textContent="ОБХОД ЭЛЕКТРОННОЙ ЗАЩИТЫ";notice.textContent="Поворачивайте плитки. Нужно провести питание от входа в левом верхнем углу до выхода в правом нижнем.";action.textContent="ЗАМКНУТЬ ЦЕПЬ";status.textContent="ЦЕПЬ РАЗОМКНУТА";circuit();log("КОД ПРИНЯТ");log("ОТКРЫТ ВНУТРЕННИЙ КОНТУР")}
+function engage(){if(over)return;if(seqStage===1){if(guess.every((v,i)=>v===sol[i]))stage2();else fail()}else{if(connected())win();else fail()}}
+function win(){over=true;clearInterval(timer);rt.textContent="ДОСТУП РАЗРЕШЁН";rx.textContent="Два уровня защиты пройдены. Механизм замка разблокирован.";overlay.classList.add("show")}
+function lose(){over=true;clearInterval(timer);rt.textContent="СИСТЕМА ЗАБЛОКИРОВАНА";rx.textContent="Превышено допустимое число ошибок. Требуется ручной сброс.";overlay.classList.add("show")}
+function start(){clearInterval(timer);sol=makeSol();guess=[1,1,1,1];attempts=3;time=80;over=false;seqStage=1;s1.classList.remove("hide");s2.classList.remove("show");$("p1").className="on";$("p2").className="";$("stage").textContent="1 / 2";title.textContent="ЛОГИЧЕСКИЙ ВЗЛОМ";notice.textContent="Положение цилиндров не показывается напрямую. Используйте диагностические подсказки и найдите подходящую комбинацию.";action.textContent="ПРОВЕРИТЬ КОМБИНАЦИЮ";status.textContent="СИСТЕМА ГОТОВА";logEl.innerHTML="";log("СИСТЕМА ИНИЦИАЛИЗИРОВАНА");log("ПОЛУЧЕНЫ ДИАГНОСТИЧЕСКИЕ ДАННЫЕ");renderCyl();renderClues();ui();tm.textContent="01:20";timer=setInterval(()=>{if(over)return;time--;tm.textContent="00:"+String(Math.max(0,time)).padStart(2,"0");if(time<=0)lose()},1000)}
+action.onclick=engage;$("reset").onclick=start;$("again").onclick=()=>{overlay.classList.remove("show");start()};start();
+})()
+</script></body></html>
