@@ -253,6 +253,63 @@ body:after{
 
 <script>
 (() => {
+  // === LOCK//07 AUDIO SYSTEM ===
+  // Все звуки синтезируются браузером, внешние файлы не нужны.
+  let audioCtx=null, masterGain=null;
+  function audioInit(){
+    if(!audioCtx){
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC)return;
+      audioCtx=new AC();
+      masterGain=audioCtx.createGain();
+      masterGain.gain.value=0.075;
+      masterGain.connect(audioCtx.destination);
+    }
+    if(audioCtx.state==='suspended') audioCtx.resume();
+  }
+  function tone(freq,duration,type='square',volume=0.22,delay=0){
+    if(!audioCtx||!masterGain)return;
+    const now=audioCtx.currentTime+delay;
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type; o.frequency.setValueAtTime(freq,now);
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(volume,now+0.006);
+    g.gain.exponentialRampToValueAtTime(0.001,now+duration);
+    o.connect(g); g.connect(masterGain); o.start(now); o.stop(now+duration+0.02);
+  }
+  function mechClick(){
+    audioInit();
+    tone(125,0.045,'square',0.34);
+    tone(62,0.07,'sine',0.24,0.012);
+  }
+  function linkedClick(){
+    audioInit();
+    tone(105,0.055,'square',0.30);
+    tone(78,0.065,'square',0.20,0.035);
+  }
+  function successSound(){
+    audioInit();
+    tone(220,0.08,'square',0.22);
+    tone(330,0.10,'square',0.22,0.09);
+    tone(440,0.16,'sine',0.25,0.20);
+    tone(660,0.22,'sine',0.20,0.34);
+  }
+  function lockoutSound(){
+    audioInit();
+    tone(90,0.16,'sawtooth',0.30);
+    tone(65,0.22,'sawtooth',0.28,0.18);
+    tone(45,0.30,'sine',0.26,0.40);
+  }
+  function warningSound(){
+    audioInit();
+    tone(440,0.055,'square',0.18);
+  }
+  function resetSound(){
+    audioInit();
+    tone(180,0.07,'square',0.20);
+    tone(120,0.09,'square',0.16,0.08);
+  }
+
   const root=document.getElementById('lockApp');
   const railsEl=document.getElementById('rails');
   const linksEl=document.getElementById('links');
@@ -308,7 +365,7 @@ body:after{
         const p=clamp(Math.round(y/step));
         move(i,p);
       };
-      rail.addEventListener('pointerdown',e=>{dragging=true;rail.setPointerCapture?.(e.pointerId);setFromY(e.clientY);});
+      rail.addEventListener('pointerdown',e=>{audioInit(); dragging=true;rail.setPointerCapture?.(e.pointerId);setFromY(e.clientY);});
       rail.addEventListener('pointermove',e=>{if(dragging)setFromY(e.clientY)});
       rail.addEventListener('pointerup',()=>dragging=false);
       rail.addEventListener('pointercancel',()=>dragging=false);
@@ -370,13 +427,16 @@ body:after{
       next[k]=clamp(next[k]+signed*d);
     });
     pos=next;
+    if(Object.keys(effects[i]).some(k=>effects[i][k]!==0 && k!==String(i))) linkedClick(); else mechClick();
     render();
   }
 
   unlock.addEventListener('click',()=>{
+    audioInit();
     if(unlock.disabled||locked)return;
     solved=true;
     clearInterval(timerId);
+    successSound();
     locked=false;
     stateText.textContent='ДОСТУП РАЗРЕШЁН';
     lockState.textContent='ОТКРЫТ';
@@ -386,6 +446,8 @@ body:after{
   });
 
   reset.addEventListener('click',()=>{
+    audioInit();
+    resetSound();
     pos=[0,0,0,0,0]; time=60;solved=false;locked=false;
     timerTopValue.textContent=time;
     timerTop.classList.toggle('warning',time<=15);
@@ -395,9 +457,12 @@ body:after{
     timerId=setInterval(()=>{if(!solved&&!locked&&time>0){
       time--; timerTopValue.textContent=time;
       timerTop.classList.toggle('warning',time<=15);
+      if(time<=10 && time>0 && time%2===0) warningSound();
+      if(time<=10 && time>0 && time%2===0) warningSound();
       if(time===0){
         locked=true;
         clearInterval(timerId);
+        lockoutSound();
         unlock.disabled=true;
         reset.disabled=false;
         stateText.textContent='СИСТЕМА ЗАБЛОКИРОВАНА';
