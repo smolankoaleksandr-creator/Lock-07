@@ -1,1 +1,187 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LOCK//07 v0.4</title><style>*{box-sizing:border-box}body{margin:0;background:#050607;color:#e7e9e8;font-family:Arial;padding:12px}.app{max-width:760px;margin:auto;border:1px solid #555;background:#0b0d0e;padding:14px}.top{display:flex;justify-content:space-between;border-bottom:1px solid #444;padding-bottom:10px;margin-bottom:12px}.brand{font-weight:800;letter-spacing:3px}.ver{font:12px monospace;color:#999}.status{font:12px monospace;margin-bottom:10px}.panel{border:1px solid #444;padding:12px}h1{font-size:18px;letter-spacing:2px}.sub,.help,.msg{font-size:12px;color:#aaa;line-height:1.5}.board{position:relative;width:100%;aspect-ratio:1.4;border:1px solid #333;background:repeating-linear-gradient(0deg,#0d1011 0,#0d1011 39px,#111414 40px),repeating-linear-gradient(90deg,transparent 0,transparent 39px,#111414 40px);overflow:hidden}.wire{position:absolute;height:3px;background:#292e2d;transform-origin:0 50%}.node{position:absolute;width:64px;height:64px;transform:translate(-50%,-50%);border:1px solid #777;background:#111414;border-radius:10px}.core{position:absolute;inset:11px;border:2px solid #bbb;border-radius:50%}.core:before,.core:after{content:"";position:absolute;background:#bbb;left:50%;top:50%;transform:translate(-50%,-50%)}.core:before{width:48px;height:5px}.core:after{width:5px;height:48px}.node.active{box-shadow:0 0 15px #eee;border-color:#eee}.node.free{border-style:dashed}.node.free:after{content:'FREE';position:absolute;bottom:-17px;left:50%;transform:translateX(-50%);font:9px monospace;color:#999}.src,.lock{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border:2px solid #bbb;display:flex;align-items:center;justify-content:center;font-size:22px}.src{left:3%}.lock{right:3%}.energy{position:absolute;left:3%;top:calc(50% + 30px);font:9px monospace;color:#777}.controls{display:flex;gap:8px;margin-top:10px}button{color:#eee;background:#111516;border:1px solid #666;padding:11px;cursor:pointer}#reset,#hint{flex:1}.overlay{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center}.modal{background:#090b0c;border:1px solid #bbb;padding:24px;text-align:center;width:min(420px,90%)}.modal button{width:100%;margin-top:10px}</style></head><body><div class="app"><div class="top"><div class="brand">LOCK//07</div><div class="ver">POWER CALIBRATION v0.4</div></div><div class="status">SYSTEM: <span id="sys">OFFLINE</span>　 NODES: <span id="count">0/5</span>　 ROTORS: <span id="moves">0</span></div><div class="panel"><h1>ЭЛЕКТРОННЫЙ ЗАМОК</h1><div class="sub">Поворачивайте роторы. Некоторые роторы механически связаны и вращаются вместе. Пунктирный ротор свободный.</div><div id="board" class="board"><div class="src">⚡</div><div class="energy">POWER</div><div class="lock">▣</div></div><div class="controls"><button id="reset">СБРОСИТЬ</button><button id="hint">ПОДСКАЗКА</button></div><div id="msg" class="msg">Система ожидает калибровки.</div><div class="help">Цель: запитать пять узлов и довести питание до замка. Нажатие на один ротор может повернуть несколько других.</div></div></div><div id="overlay" class="overlay"><div class="modal"><h2>ACCESS GRANTED</h2><p>Электропитание стабилизировано. Замок разблокирован.</p><button id="again">ПОВТОРИТЬ</button></div></div><script>const board=document.querySelector('#board'),nodes={},defs=[['A',23,28,['A','B'],1,0],['B',48,28,['A','B','C'],1,0],['C',73,28,['B','C'],-1,0],['D',35,68,['D','E'],1,0],['E',63,68,['D','E','F'],1,0],['F',86,68,['F'],1,0]];const sol={A:2,B:1,C:3,D:0,E:2,F:1};let moves=0;function init(){document.querySelectorAll('.node,.wire').forEach(e=>e.remove());for(const [id,x,y,g,dir,rot] of defs){let b=document.createElement('button');b.className='node'+(id==='F'?' free':'');b.style.left=x+'%';b.style.top=y+'%';b.innerHTML='<div class="core"></div>';b.onclick=()=>rotate(id);nodes[id]={id,x,y,g,dir,rot,b}}moves=0;render();evaluate()}function rotate(id){let d=nodes[id];d.g.forEach(k=>nodes[k].rot=(nodes[k].rot+d.dir+4)%4);moves++;document.querySelector('#moves').textContent=moves;render();evaluate()}function render(){document.querySelectorAll('.wire').forEach(e=>e.remove());[['A','B'],['B','C'],['A','D'],['B','E'],['C','E'],['D','E'],['E','F']].forEach(([a,b])=>{let A=nodes[a],B=nodes[b],x=A.x/100*board.clientWidth,y=A.y/100*board.clientHeight,X=B.x/100*board.clientWidth,Y=B.y/100*board.clientHeight,w=document.createElement('div'),len=Math.hypot(X-x,Y-y);w.className='wire';w.style.width=len+'px';w.style.left=x+'px';w.style.top=y+'px';w.style.transform='rotate('+Math.atan2(Y-y,X-x)*180/Math.PI+'deg)';board.appendChild(w)});Object.values(nodes).forEach(d=>{d.b.style.transform='translate(-50%,-50%) rotate('+d.rot*90+'deg)';board.appendChild(d.b)})}function evaluate(){let good=Object.values(nodes).filter(d=>d.id!=='F'&&d.rot===sol[d.id]);document.querySelector('#count').textContent=good.length+'/5';Object.values(nodes).forEach(d=>d.b.classList.toggle('active',good.includes(d)));document.querySelector('#msg').textContent='POWER: '+Math.round(good.length/5*100)+'% — цепь '+(good.length===5?'стабилизирована.':'нестабильна.');if(good.length===5){document.querySelector('#sys').textContent='ONLINE';setTimeout(()=>document.querySelector('#overlay').style.display='flex',300)}}document.querySelector('#reset').onclick=init;document.querySelector('#again').onclick=()=>{document.querySelector('#overlay').style.display='none';init()};document.querySelector('#hint').onclick=()=>document.querySelector('#msg').textContent='ПОДСКАЗКА: F — свободный ротор. Он не вращается вместе с другими.';addEventListener('resize',render);init();</script></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>LOCK//07 — v0.4.1</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#050606;color:#e6e8e7;font-family:Arial,Helvetica,sans-serif}
+body{display:flex;justify-content:center;padding:14px}
+.app{width:min(820px,100%);border:1px solid #5b615f;background:#0a0c0d;padding:14px;box-shadow:0 0 35px #000}
+.top{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #444;padding:3px 2px 12px;margin-bottom:12px}
+.brand{font-weight:900;letter-spacing:4px}.ver{font:12px monospace;color:#a8adab}
+.status{font:12px monospace;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.pill{border:1px solid #4d5351;padding:5px 8px}
+.panel{border:1px solid #4d5351;padding:12px;background:#080a0b}
+h1{font-size:18px;letter-spacing:2px;margin:0 0 6px}
+.sub{font-size:12px;line-height:1.45;color:#a8aeac;margin-bottom:12px}
+.board{position:relative;height:480px;border:1px solid #343938;background:
+linear-gradient(#111516 1px,transparent 1px),
+linear-gradient(90deg,#111516 1px,transparent 1px);
+background-size:40px 40px;overflow:hidden}
+svg{position:absolute;inset:0;width:100%;height:100%}
+.track{stroke:#252a29;stroke-width:7;fill:none}
+.track.active{stroke:#e8ecea;filter:drop-shadow(0 0 5px #fff)}
+.drive{stroke:#676d6b;stroke-width:5;fill:none}
+.rotor{position:absolute;width:92px;height:92px;transform:translate(-50%,-50%);border:1px solid #777d7b;border-radius:12px;background:#0c0f10;touch-action:manipulation;padding:0}
+.rotor:active{background:#171a1b}
+.rotor .plate{position:absolute;inset:9px;border:1px solid #555b59;border-radius:50%;transition:transform .22s ease}
+.rotor .contact{position:absolute;width:15px;height:15px;background:#050606;border:2px solid #d0d5d3;border-radius:50%;transform:translate(-50%,-50%)}
+.rotor .line{position:absolute;height:6px;background:#d0d5d3;left:50%;top:50%;transform-origin:0 50%;border-radius:4px}
+.rotor .tag{position:absolute;left:6px;top:5px;font:11px monospace;color:#969d9a}
+.rotor.active{border-color:#eef1ef;box-shadow:0 0 18px #dfe4e2}
+.rotor.active .line{background:#fff}
+.rotor.free{border:1px dashed #8b918f}
+.rotor.free .plate{border-style:dashed}
+.rotor.free:after{content:"INDEPENDENT";position:absolute;left:50%;bottom:-21px;transform:translateX(-50%);font:9px monospace;color:#8d9491;white-space:nowrap}
+.source{position:absolute;left:6%;top:50%;width:60px;height:60px;border:2px solid #cbd0ce;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-size:26px;background:#080a0b}
+.source span{position:absolute;top:63px;font:10px monospace;color:#8d9491}
+.lock{position:absolute;right:5%;top:50%;width:64px;height:64px;border:2px solid #cbd0ce;transform:translate(50%,-50%);display:flex;align-items:center;justify-content:center;font-size:25px;background:#080a0b}
+.lock span{position:absolute;top:67px;font:10px monospace;color:#8d9491}
+.controls{display:flex;gap:8px;margin-top:12px}
+button.ctrl{flex:1;padding:12px;border:1px solid #707674;background:#111415;color:#e6e9e8;font-weight:700;letter-spacing:1px}
+.msg{min-height:42px;margin-top:10px;border-top:1px solid #343938;padding-top:9px;font:12px monospace;color:#b9bfbd;line-height:1.5}
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:11px;color:#9da3a1;margin-top:10px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;border:1px solid #cfd4d2;margin-right:5px;vertical-align:-1px}
+.dot.white{background:#eee}.dot.dark{background:#111}.dot.dash{border-style:dashed}
+@media(max-width:600px){body{padding:7px}.app{padding:9px}.board{height:440px}.rotor{width:76px;height:76px}.rotor .line{height:5px}.rotor .contact{width:13px;height:13px}.source{width:48px;height:48px}.lock{width:52px;height:52px}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div class="brand">LOCK//07</div><div class="ver">POWER CALIBRATION v0.4.1</div></div>
+<div class="status"><div class="pill" id="sys">SYSTEM: OFFLINE</div><div class="pill">POWERED: <span id="count">0/5</span></div><div class="pill">ROTATIONS: <span id="moves">0</span></div></div>
+<div class="panel">
+<h1>ЭЛЕКТРОННЫЙ ЗАМОК</h1>
+<div class="sub">У каждого ротора свой набор контактов. Поворот меняет их положение. Серые валы показывают механические связи: связанные роторы вращаются вместе.</div>
+<div class="board" id="board">
+<svg id="svg" viewBox="0 0 1000 480" preserveAspectRatio="none"></svg>
+<div class="source">⚡<span>POWER</span></div>
+<div class="lock">▣<span>LOCK</span></div>
+</div>
+<div class="controls"><button class="ctrl" id="reset">СБРОСИТЬ</button><button class="ctrl" id="hint">ПОДСКАЗКА</button></div>
+<div class="msg" id="msg">Белая линия = активное питание. Нажимайте на роторы и наблюдайте, какие элементы вращаются вместе.</div>
+<div class="legend"><span><i class="dot white"></i>питание</span><span><i class="dot dark"></i>неактивный контакт</span><span><i class="dot dash"></i>независимый ротор</span></div>
+</div>
+</div>
+<script>
+const board=document.getElementById('board'),svg=document.getElementById('svg');
+const nodes=[
+{id:'A',x:22,y:25,shape:[0,1,2],group:'G1',sign:1,rot:0},
+{id:'B',x:50,y:25,shape:[0,2,3],group:'G1',sign:1,rot:0},
+{id:'C',x:78,y:25,shape:[1,2],group:'G1',sign:-1,rot:0},
+{id:'D',x:34,y:67,shape:[0,3],group:'G2',sign:1,rot:0},
+{id:'E',x:62,y:67,shape:[0,1,3],group:'G2',sign:-1,rot:0},
+{id:'F',x:86,y:67,shape:[0,2],group:'FREE',sign:1,rot:0,free:true}
+];
+const links=[['A','B'],['B','C'],['A','D'],['B','E'],['C','E'],['D','E'],['E','F']];
+const nodeMap=Object.fromEntries(nodes.map(n=>[n.id,n]));
+let moves=0,won=false;
+
+function contactPoints(n){
+ const s=n.shape.map(v=>(v+n.rot)%4);
+ return s;
+}
+function makeRotor(n){
+ const el=document.createElement('button');el.className='rotor'+(n.free?' free':'');el.id='r'+n.id;
+ el.style.left=n.x+'%';el.style.top=n.y+'%';
+ el.innerHTML='<span class="tag">'+n.id+'</span><div class="plate"></div>';
+ const plate=el.querySelector('.plate');
+ n.shape.forEach(v=>{
+   const line=document.createElement('div');line.className='line';
+   const ang=v*90;
+   line.style.width='32px';line.style.transform=`translateY(-50%) rotate(${ang}deg)`;
+   line.style.left='50%';line.style.top='50%';
+   plate.appendChild(line);
+   const p=document.createElement('i');p.className='contact';
+   const coords=[[50,8],[92,50],[50,92],[8,50]][v];
+   p.style.left=coords[0]+'%';p.style.top=coords[1]+'%';p.dataset.base=v;
+   plate.appendChild(p);
+ });
+ el.onclick=()=>rotate(n.id);
+ board.appendChild(el);
+ n.el=el;
+}
+function rotate(id){
+ if(won)return;
+ const n=nodeMap[id];
+ const affected=n.group==='FREE'?[id]:nodes.filter(x=>x.group===n.group).map(x=>x.id);
+ affected.forEach(k=>{
+   const q=nodeMap[k];
+   q.rot=(q.rot+q.sign+4)%4;
+ });
+ moves++;document.getElementById('moves').textContent=moves;
+ render();evaluate();
+}
+function render(){
+ nodes.forEach(n=>{
+   n.el.querySelector('.plate').style.transform=`rotate(${n.rot*90}deg)`;
+   const active=isPowered(n.id);
+   n.el.classList.toggle('active',active);
+ });
+ drawDrives();
+}
+function drawDrives(){
+ svg.innerHTML='';
+ links.forEach(([a,b])=>{
+   const A=nodeMap[a],B=nodeMap[b];
+   const x1=A.x*10,y1=A.y/100*480,x2=B.x*10,y2=B.y/100*480;
+   const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+   l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('class','drive');
+   svg.appendChild(l);
+ });
+ // source and lock rails
+ [['src',6,50,22,50],['lock',86,67,95,50]].forEach(v=>{
+   const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+   l.setAttribute('x1',v[1]*10);l.setAttribute('y1',v[2]/100*480);l.setAttribute('x2',v[3]*10);l.setAttribute('y2',v[4]/100*480);l.setAttribute('class','track');
+   svg.appendChild(l);
+ });
+ // active electrical paths: simplified connection model based on actual contact compatibility
+ links.forEach(([a,b])=>{
+   if(canConnect(nodeMap[a],nodeMap[b]) && isPowered(a) && isPowered(b)){
+     const A=nodeMap[a],B=nodeMap[b];
+     const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+     l.setAttribute('x1',A.x*10);l.setAttribute('y1',A.y/100*480);l.setAttribute('x2',B.x*10);l.setAttribute('y2',B.y/100*480);l.setAttribute('class','track active');svg.appendChild(l);
+   }
+ });
+}
+function canConnect(a,b){
+ // A connection is live when the two facing sides both have contacts.
+ const dx=b.x-a.x,dy=b.y-a.y;
+ let sideA,sideB;
+ if(Math.abs(dx)>Math.abs(dy)){sideA=dx>0?1:3;sideB=dx>0?3:1}
+ else{sideA=dy>0?2:0;sideB=dy>0?0:2}
+ return contactPoints(a).includes(sideA)&&contactPoints(b).includes(sideB);
+}
+function isPowered(id){
+ // BFS from source. Source enters A from the left.
+ const powered=new Set();
+ const first=nodeMap.A;
+ if(!contactPoints(first).includes(3))return id==='A'&&false;
+ powered.add('A');
+ let changed=true;
+ while(changed){
+   changed=false;
+   links.forEach(([a,b])=>{
+     if(powered.has(a)&&canConnect(nodeMap[a],nodeMap[b])&&!powered.has(b)){powered.add(b);changed=true}
+     if(powered.has(b)&&canConnect(nodeMap[a],nodeMap[b])&&!powered.has(a)){powered.add(a);changed=true}
+   });
+ }
+ return powered.has(id);
+}
+function evaluate(){
+ let c=nodes.filter(n=>isPowered(n.id)).length;
+ document.getElementById('count').textContent=c+'/5';
+ document.getElementById('sys').textContent=c===5?'SYSTEM: ONLINE':'SYSTEM: OFFLINE';
+ if(c===5 && isPowered('F')){
+   won=true;document.getElementById('msg').textContent='POWER: 100% — ВСЕ УЗЛЫ ЗАПИТАНЫ. ЗАМОК РАЗБЛОКИРОВАН.';
+ }else{
+   document.getElementById('msg').textContent='POWER: '+Math.round(c/5*100)+'% — найдите непрерывный путь от POWER до LOCK.';
+ }
+}
+document.getElementById('reset').onclick=()=>location.reload();
+document.getElementById('hint').onclick=()=>document.getElementById('msg').textContent='Подсказка: сначала найдите положение A, в котором питание может войти слева. F не связан механически с остальными и вращается отдельно.';
+nodes.forEach(makeRotor);render();evaluate();
+</script>
+</body></html>
