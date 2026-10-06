@@ -6,8 +6,8 @@
 <title>ЗАМОК//07 — v1.4</title>
 <style>
 :root{
-  --bg:#090a0b; --panel:#111315; --panel2:#17191c; --line:#34383d;
-  --text:#e9ecef; --muted:#858b91; --white:#f7f8f9; --ok:#f7f8f9;
+  --bg:#050805; --panel:#071007; --panel2:#0b160b; --line:#1f4a22;
+  --text:#8cff8c; --muted:#4e8b52; --white:#b7ffb7; --ok:#b7ffb7;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
@@ -21,22 +21,22 @@ body{
 .header{
   border:1px solid #30343a; background:linear-gradient(#171a1d,#101214);
   padding:12px 14px; position:relative; overflow:hidden;
-  box-shadow:0 12px 35px #0008, inset 0 1px #ffffff10;
+  box-shadow:0 12px 35px #000, inset 0 1px #69ff6918, 0 0 28px #18ff1810;
 }
 .header:before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#f0f1f2;
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#69ff69; box-shadow:0 0 10px #69ff6966;
 }
 .brand{font-weight:900;letter-spacing:4px;font-size:21px}
-.sub{margin-top:3px;color:#8f959a;font-size:10px;letter-spacing:2px}
+.sub{margin-top:3px;color:#4e9a52;font-size:10px;letter-spacing:2px}
 .statusbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
 .badge{
-  border:1px solid #3b4045;background:#0b0d0f;padding:6px 9px;
-  font-size:10px;letter-spacing:1px;color:#b9bdc1;
+  border:1px solid #3b4045;background:#030803;padding:6px 9px;
+  font-size:10px;letter-spacing:1px;color:#67bd69;
 }
-.badge strong{color:#fff}
+.badge strong{color:#8cff8c}
 .module{
-  margin-top:10px;border:1px solid #34383d;background:#101214;
-  box-shadow:0 16px 40px #0009;
+  margin-top:10px;border:1px solid #34383d;background:#071007;
+  box-shadow:0 16px 40px #000, 0 0 25px #1cff1c08;
 }
 .module-head{
   padding:11px 13px;border-bottom:1px solid #2d3135;
@@ -53,7 +53,7 @@ body{
 }
 .machine-frame{
   border:1px solid #3b4045;padding:18px 12px 16px;
-  background:linear-gradient(180deg,#15181b,#0d0f11);
+  background:linear-gradient(180deg,#0d1a0e,#050b05);
   position:relative;
 }
 .machine-frame:before,.machine-frame:after{
@@ -68,65 +68,65 @@ body{
 .rail-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;color:#92989d;font-size:10px;letter-spacing:1px}
 .rail-label b{color:#d9dcdf;font-size:11px}
 .rail{
-  position:relative;height:285px;border:1px solid #41464b;background:#090b0d;
+  position:relative;height:285px;border:1px solid #41464b;background:#020602;
   overflow:hidden;touch-action:none;cursor:pointer;
-  box-shadow:inset 0 0 0 3px #050607,inset 0 0 25px #000;
+  box-shadow:inset 0 0 0 3px #020402,inset 0 0 25px #000, inset 0 0 18px #18ff1810;
 }
 .rail:before{
   content:"";position:absolute;left:50%;top:8px;bottom:8px;width:18px;transform:translateX(-50%);
-  border:1px solid #353a3f;background:linear-gradient(90deg,#08090a,#202327,#08090a);
+  border:1px solid #353a3f;background:linear-gradient(90deg,#020502,#123014,#020502);
 }
 .slot{
   position:absolute;left:50%;transform:translate(-50%,-50%);
-  width:42px;height:29px;border:1px solid #292d31;background:#0d0f11;
+  width:42px;height:29px;border:1px solid #1e4c22;background:#061006;
   display:flex;align-items:center;justify-content:center;
 }
-.slot .num{font-size:8px;color:#555b60}
+.slot .num{font-size:8px;color:#36763b}
 .slot.work{
-  border:2px solid #f3f4f5;background:#e9eaeb;color:#08090a;
-  box-shadow:0 0 0 1px #7d8287,0 0 13px #fff3;
+  border:2px solid #78ff78;background:#173d19;color:#9cff9c;
+  box-shadow:0 0 0 1px #4d9d52,0 0 16px #39ff3955;
 }
-.slot.work .num{color:#090a0b;font-weight:900}
+.slot.work .num{color:#9cff9c;font-weight:900}
 .handle{
   position:absolute;left:50%;transform:translate(-50%,-50%);
   width:52px;height:38px;border:1px solid #777d82;
-  background:linear-gradient(180deg,#d9dcde,#73787c 42%,#35393c 43%,#a9adb0);
-  box-shadow:0 3px 0 #151719,0 0 0 2px #0a0b0c;
+  background:linear-gradient(180deg,#b7ffb7,#2d7d32 43%,#0a200c 44%,#55b85a);
+  box-shadow:0 3px 0 #010301,0 0 0 2px #071007,0 0 12px #27ff2733;
   z-index:5;transition:top .13s cubic-bezier(.2,.8,.2,1);
 }
 .handle:before,.handle:after{
-  content:"";position:absolute;top:7px;bottom:7px;width:3px;background:#303437;
+  content:"";position:absolute;top:7px;bottom:7px;width:3px;background:#143e17;
 }
 .handle:before{left:7px}.handle:after{right:7px}
-.handle .center{width:19px;height:5px;background:#25282b;border:1px solid #111;box-shadow:inset 0 1px #fff4}
+.handle .center{width:19px;height:5px;background:#071307;border:1px solid #102610;box-shadow:inset 0 1px #fff4}
 .okmark{
   position:absolute;right:4px;top:4px;width:17px;height:17px;
-  display:none;align-items:center;justify-content:center;background:#f1f2f3;color:#090a0b;
+  display:none;align-items:center;justify-content:center;background:#69ff69;color:#021002; box-shadow:0 0 10px #39ff3966;
   font-weight:900;font-size:11px;z-index:7;
 }
-.rail.correct{border-color:#aeb3b7;box-shadow:inset 0 0 0 2px #fff2,inset 0 0 28px #fff1}
+.rail.correct{border-color:#52b957;box-shadow:inset 0 0 0 2px #43ff4322,inset 0 0 28px #20ff2015,0 0 10px #20ff2018;}
 .rail.correct .okmark{display:flex}
-.rail.correct .handle{border-color:#fff}
+.rail.correct .handle{border-color:#8cff8c}
 .link-layer{position:absolute;left:0;right:0;top:54px;height:285px;pointer-events:none;z-index:3}
 .link{
-  position:absolute;height:3px;background:#666b70;box-shadow:0 0 0 1px #161819;
+  position:absolute;height:3px;background:#3d8b42; box-shadow:0 0 7px #35ff3533;box-shadow:0 0 0 1px #161819;
   transform-origin:left center;opacity:.9;
 }
 .link-dot{
   position:absolute;width:10px;height:10px;border:1px solid #999;transform:translate(-50%,-50%);
-  background:#151719;border-radius:50%;
+  background:#071007;border-radius:50%; box-shadow:0 0 8px #35ff3533;
 }
 .link-text{
-  position:absolute;font-size:8px;letter-spacing:1px;color:#70767b;white-space:nowrap;
-  transform:translate(-50%,-50%);background:#101214;padding:2px 4px;
+  position:absolute;font-size:8px;letter-spacing:1px;color:#4c9651;white-space:nowrap;
+  transform:translate(-50%,-50%);background:#071007;padding:2px 4px;
 }
 .legend{
-  display:flex;justify-content:center;gap:15px;flex-wrap:wrap;margin-top:15px;color:#777d82;
+  display:flex;justify-content:center;gap:15px;flex-wrap:wrap;margin-top:15px;color:#438347;
   font-size:9px;letter-spacing:1px;text-transform:uppercase;
 }
 .legend span{display:flex;align-items:center;gap:5px}
-.legend .box{width:13px;height:8px;border:1px solid #fff;background:#eee}
-.legend .line{width:20px;height:2px;background:#6b7075}
+.legend .box{width:13px;height:8px;border:1px solid #fff;background:#69ff69; box-shadow:0 0 7px #39ff3955;}
+.legend .line{width:20px;height:2px;background:#3d8b42;}
 .controls{
   display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px;border-top:1px solid #2d3135;
 }
@@ -135,20 +135,20 @@ button{
   font-weight:800;letter-spacing:1px;font-size:11px;cursor:pointer;
 }
 button:active{transform:translateY(1px)}
-button.primary{background:#e8e9ea;color:#08090a;border-color:#fff}
-button.primary:disabled{opacity:.28;cursor:not-allowed;background:#9da1a4;color:#111}
+button.primary{background:#e8e9ea;color:#031003;border-color:#8cff8c}
+button.primary:disabled{opacity:.28;cursor:not-allowed;background:#1d3c1f;color:#3d7040}
 .info{
-  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#2d3135;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#163919;
   border-top:1px solid #2d3135;
 }
-.info-cell{background:#101214;padding:10px 12px}
-.info-label{font-size:8px;color:#6e7479;letter-spacing:1px}
+.info-cell{background:#071007;padding:10px 12px}
+.info-label{font-size:8px;color:#3e7f43;letter-spacing:1px}
 .info-value{font-size:12px;margin-top:3px;font-weight:800}
 .message{
-  padding:11px 13px;border-top:1px solid #2d3135;color:#8d9398;
+  padding:11px 13px;border-top:1px solid #2d3135;color:#4f9c54;
   font-size:10px;line-height:1.5;letter-spacing:.4px;
 }
-.message.ok{color:#f1f2f3}
+.message.ok{color:#9cff9c}
 @media(max-width:600px){
   body{padding:8px 6px 18px}
   .brand{font-size:18px}
@@ -164,6 +164,23 @@ button.primary:disabled{opacity:.28;cursor:not-allowed;background:#9da1a4;color:
   .info{grid-template-columns:1fr 1fr 1fr}
   .info-value{font-size:11px}
 }
+
+/* RETRO TERMINAL / CRT PASS */
+body:after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
+  background:repeating-linear-gradient(to bottom,rgba(80,255,80,.035) 0,rgba(80,255,80,.035) 1px,transparent 1px,transparent 4px);
+  mix-blend-mode:screen;opacity:.45;
+}
+.app{filter:contrast(1.04)}
+.header,.module{border-color:#245a28}
+.brand,.module-title,.badge,.info-value,button,.rail-label b{
+  text-shadow:0 0 6px #36ff3655;
+}
+.header:after{
+  content:"SYSTEM ONLINE // SECURE ACCESS";
+  position:absolute;right:12px;top:10px;font-size:8px;letter-spacing:1px;color:#397e40;
+}
+@media(max-width:600px){.header:after{display:none}}
 </style>
 </head>
 <body>
