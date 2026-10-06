@@ -3,185 +3,112 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>LOCK//07 — v0.4.1</title>
+<title>LOCK//07</title>
 <style>
-*{box-sizing:border-box}
-html,body{margin:0;background:#050606;color:#e6e8e7;font-family:Arial,Helvetica,sans-serif}
-body{display:flex;justify-content:center;padding:14px}
-.app{width:min(820px,100%);border:1px solid #5b615f;background:#0a0c0d;padding:14px;box-shadow:0 0 35px #000}
-.top{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #444;padding:3px 2px 12px;margin-bottom:12px}
-.brand{font-weight:900;letter-spacing:4px}.ver{font:12px monospace;color:#a8adab}
-.status{font:12px monospace;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.pill{border:1px solid #4d5351;padding:5px 8px}
-.panel{border:1px solid #4d5351;padding:12px;background:#080a0b}
-h1{font-size:18px;letter-spacing:2px;margin:0 0 6px}
-.sub{font-size:12px;line-height:1.45;color:#a8aeac;margin-bottom:12px}
-.board{position:relative;height:480px;border:1px solid #343938;background:
-linear-gradient(#111516 1px,transparent 1px),
-linear-gradient(90deg,#111516 1px,transparent 1px);
-background-size:40px 40px;overflow:hidden}
-svg{position:absolute;inset:0;width:100%;height:100%}
-.track{stroke:#252a29;stroke-width:7;fill:none}
-.track.active{stroke:#e8ecea;filter:drop-shadow(0 0 5px #fff)}
-.drive{stroke:#676d6b;stroke-width:5;fill:none}
-.rotor{position:absolute;width:92px;height:92px;transform:translate(-50%,-50%);border:1px solid #777d7b;border-radius:12px;background:#0c0f10;touch-action:manipulation;padding:0}
-.rotor:active{background:#171a1b}
-.rotor .plate{position:absolute;inset:9px;border:1px solid #555b59;border-radius:50%;transition:transform .22s ease}
-.rotor .contact{position:absolute;width:15px;height:15px;background:#050606;border:2px solid #d0d5d3;border-radius:50%;transform:translate(-50%,-50%)}
-.rotor .line{position:absolute;height:6px;background:#d0d5d3;left:50%;top:50%;transform-origin:0 50%;border-radius:4px}
-.rotor .tag{position:absolute;left:6px;top:5px;font:11px monospace;color:#969d9a}
-.rotor.active{border-color:#eef1ef;box-shadow:0 0 18px #dfe4e2}
-.rotor.active .line{background:#fff}
-.rotor.free{border:1px dashed #8b918f}
-.rotor.free .plate{border-style:dashed}
-.rotor.free:after{content:"INDEPENDENT";position:absolute;left:50%;bottom:-21px;transform:translateX(-50%);font:9px monospace;color:#8d9491;white-space:nowrap}
-.source{position:absolute;left:6%;top:50%;width:60px;height:60px;border:2px solid #cbd0ce;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-size:26px;background:#080a0b}
-.source span{position:absolute;top:63px;font:10px monospace;color:#8d9491}
-.lock{position:absolute;right:5%;top:50%;width:64px;height:64px;border:2px solid #cbd0ce;transform:translate(50%,-50%);display:flex;align-items:center;justify-content:center;font-size:25px;background:#080a0b}
-.lock span{position:absolute;top:67px;font:10px monospace;color:#8d9491}
-.controls{display:flex;gap:8px;margin-top:12px}
-button.ctrl{flex:1;padding:12px;border:1px solid #707674;background:#111415;color:#e6e9e8;font-weight:700;letter-spacing:1px}
-.msg{min-height:42px;margin-top:10px;border-top:1px solid #343938;padding-top:9px;font:12px monospace;color:#b9bfbd;line-height:1.5}
-.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:11px;color:#9da3a1;margin-top:10px}
-.dot{display:inline-block;width:10px;height:10px;border-radius:50%;border:1px solid #cfd4d2;margin-right:5px;vertical-align:-1px}
-.dot.white{background:#eee}.dot.dark{background:#111}.dot.dash{border-style:dashed}
-@media(max-width:600px){body{padding:7px}.app{padding:9px}.board{height:440px}.rotor{width:76px;height:76px}.rotor .line{height:5px}.rotor .contact{width:13px;height:13px}.source{width:48px;height:48px}.lock{width:52px;height:52px}}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#050606;color:#eee;font-family:Courier New,monospace;overflow:hidden}
+body{display:flex;align-items:center;justify-content:center}
+.scan{position:fixed;inset:0;pointer-events:none;opacity:.045;background:repeating-linear-gradient(#fff 0 1px,transparent 1px 5px)}
+.machine{width:min(1000px,96vw);height:min(700px,94vh);background:#0b0d0d;border:1px solid #555;box-shadow:0 0 0 7px #030404,0 25px 80px #000;padding:18px}
+.head{height:62px;border:1px solid #444;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.logo{font-size:20px;font-weight:bold;letter-spacing:5px}.sub{font-size:10px;color:#777;letter-spacing:2px}
+.main{height:calc(100% - 80px);margin-top:18px;display:grid;grid-template-columns:1fr 260px;gap:18px}
+.panel{border:1px solid #3f4444;background:#090b0b;position:relative;padding:22px}
+.label{font-size:10px;color:#777;letter-spacing:2px}.title{font-size:19px;letter-spacing:3px;margin:8px 0 18px}
+.instruction{font-size:11px;color:#999;line-height:1.6;border-block:1px solid #292d2d;padding:10px 0}
+.lock{margin:25px auto 20px;width:min(470px,90%);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tumbler{height:180px;border:1px solid #555;background:#101313;position:relative;overflow:hidden;cursor:pointer}
+.tumbler:hover{border-color:#aaa}.rail{position:absolute;left:50%;top:15px;bottom:15px;width:3px;background:#555;transform:translateX(-50%)}
+.pin{position:absolute;left:50%;width:44px;height:22px;background:#aaa;border:2px solid #eee;transform:translate(-50%,-50%);transition:top .15s}
+.pin:after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;background:#111;transform:translate(-50%,-50%)}
+.target{position:absolute;left:0;right:0;top:38%;height:45px;border-block:1px dashed #777;pointer-events:none}
+.num{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:9px;color:#666}
+.status{text-align:center;font-size:11px;color:#aaa;min-height:17px}
+.buttons{display:flex;gap:8px;justify-content:center;margin-top:14px}
+button{font:inherit;color:#bbb;background:#141717;border:1px solid #505555;padding:10px 18px;cursor:pointer}
+button:hover{color:#fff;border-color:#aaa}button:active{transform:translateY(1px)}
+.side{border:1px solid #3f4444;background:#090b0b;padding:18px}
+h2{font-size:12px;letter-spacing:3px;margin:0 0 18px}.stat{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #252929;font-size:11px}.v{color:#eee}
+.attempts{letter-spacing:4px}.log{margin-top:20px;height:170px;overflow:hidden;font-size:9px;line-height:1.8;color:#666}
+.help{position:absolute;bottom:16px;left:18px;right:18px;font-size:9px;color:#555;line-height:1.5}
+.overlay{position:absolute;inset:0;background:rgba(2,3,3,.96);display:none;align-items:center;justify-content:center;text-align:center;z-index:10}
+.overlay.on{display:flex}.result{border:1px solid #777;padding:35px;min-width:65%}.big{font-size:27px;letter-spacing:5px}.result p{font-size:11px;color:#999}
+@media(max-width:700px){.machine{height:96vh;padding:9px}.head{height:54px}.main{grid-template-columns:1fr}.side{display:none}.panel{padding:14px}.tumbler{height:150px}.lock{margin-top:18px}}
 </style>
 </head>
 <body>
-<div class="app">
-<div class="top"><div class="brand">LOCK//07</div><div class="ver">POWER CALIBRATION v0.4.1</div></div>
-<div class="status"><div class="pill" id="sys">SYSTEM: OFFLINE</div><div class="pill">POWERED: <span id="count">0/5</span></div><div class="pill">ROTATIONS: <span id="moves">0</span></div></div>
-<div class="panel">
-<h1>ЭЛЕКТРОННЫЙ ЗАМОК</h1>
-<div class="sub">У каждого ротора свой набор контактов. Поворот меняет их положение. Серые валы показывают механические связи: связанные роторы вращаются вместе.</div>
-<div class="board" id="board">
-<svg id="svg" viewBox="0 0 1000 480" preserveAspectRatio="none"></svg>
-<div class="source">⚡<span>POWER</span></div>
-<div class="lock">▣<span>LOCK</span></div>
-</div>
-<div class="controls"><button class="ctrl" id="reset">СБРОСИТЬ</button><button class="ctrl" id="hint">ПОДСКАЗКА</button></div>
-<div class="msg" id="msg">Белая линия = активное питание. Нажимайте на роторы и наблюдайте, какие элементы вращаются вместе.</div>
-<div class="legend"><span><i class="dot white"></i>питание</span><span><i class="dot dark"></i>неактивный контакт</span><span><i class="dot dash"></i>независимый ротор</span></div>
+<div class="scan"></div>
+<div class="machine">
+<header class="head"><div class="logo">LOCK//07</div><div class="sub">MANUAL OVERRIDE / REV. 3.7</div></header>
+<div class="main">
+<section class="panel">
+<div class="label">ELECTROMECHANICAL SECURITY CORE</div>
+<div class="title">ALIGN THE LOCK CYLINDERS</div>
+<div class="instruction">TAP EACH CYLINDER TO MOVE ITS PIN. ALIGN ALL FOUR PINS WITH THE WHITE SECURITY BAND, THEN ENGAGE OVERRIDE.</div>
+<div class="lock" id="lock"></div>
+<div class="status" id="status">SYSTEM WAITING FOR INPUT</div>
+<div class="buttons"><button id="open">ENGAGE OVERRIDE</button><button id="reset">RESET</button></div>
+<div class="overlay" id="overlay"><div class="result"><div class="big" id="resultTitle"></div><p id="resultText"></p><button id="again">REINITIALIZE</button></div></div>
+<div class="help">MECHANISM: EACH CYLINDER HAS 6 POSITIONS. CORRECT ALIGNMENT IS REQUIRED.</div>
+</section>
+<aside class="side">
+<h2>SYSTEM DIAGNOSTICS</h2>
+<div class="stat"><span>SECURITY</span><span class="v">ACTIVE</span></div>
+<div class="stat"><span>DIFFICULTY</span><span class="v" id="difficulty">NORMAL</span></div>
+<div class="stat"><span>ATTEMPTS</span><span class="v attempts" id="attempts">● ● ● ●</span></div>
+<div class="stat"><span>TIME</span><span class="v" id="time">00:35</span></div>
+<div class="stat"><span>CYLINDERS</span><span class="v">04</span></div>
+<div class="log" id="log"></div>
+</aside>
 </div>
 </div>
 <script>
-const board=document.getElementById('board'),svg=document.getElementById('svg');
-const nodes=[
-{id:'A',x:22,y:25,shape:[0,1,2],group:'G1',sign:1,rot:0},
-{id:'B',x:50,y:25,shape:[0,2,3],group:'G1',sign:1,rot:0},
-{id:'C',x:78,y:25,shape:[1,2],group:'G1',sign:-1,rot:0},
-{id:'D',x:34,y:67,shape:[0,3],group:'G2',sign:1,rot:0},
-{id:'E',x:62,y:67,shape:[0,1,3],group:'G2',sign:-1,rot:0},
-{id:'F',x:86,y:67,shape:[0,2],group:'FREE',sign:1,rot:0,free:true}
-];
-const links=[['A','B'],['B','C'],['A','D'],['B','E'],['C','E'],['D','E'],['E','F']];
-const nodeMap=Object.fromEntries(nodes.map(n=>[n.id,n]));
-let moves=0,won=false;
+(function(){
+"use strict";
+const lockEl=document.getElementById("lock"),statusEl=document.getElementById("status"),attemptEl=document.getElementById("attempts"),timeEl=document.getElementById("time"),logEl=document.getElementById("log"),overlay=document.getElementById("overlay"),title=document.getElementById("resultTitle"),text=document.getElementById("resultText");
+let pos=[],target=[],attempts=4,time=35,timer=null,over=false;
 
-function contactPoints(n){
- const s=n.shape.map(v=>(v+n.rot)%4);
- return s;
-}
-function makeRotor(n){
- const el=document.createElement('button');el.className='rotor'+(n.free?' free':'');el.id='r'+n.id;
- el.style.left=n.x+'%';el.style.top=n.y+'%';
- el.innerHTML='<span class="tag">'+n.id+'</span><div class="plate"></div>';
- const plate=el.querySelector('.plate');
- n.shape.forEach(v=>{
-   const line=document.createElement('div');line.className='line';
-   const ang=v*90;
-   line.style.width='32px';line.style.transform=`translateY(-50%) rotate(${ang}deg)`;
-   line.style.left='50%';line.style.top='50%';
-   plate.appendChild(line);
-   const p=document.createElement('i');p.className='contact';
-   const coords=[[50,8],[92,50],[50,92],[8,50]][v];
-   p.style.left=coords[0]+'%';p.style.top=coords[1]+'%';p.dataset.base=v;
-   plate.appendChild(p);
- });
- el.onclick=()=>rotate(n.id);
- board.appendChild(el);
- n.el=el;
-}
-function rotate(id){
- if(won)return;
- const n=nodeMap[id];
- const affected=n.group==='FREE'?[id]:nodes.filter(x=>x.group===n.group).map(x=>x.id);
- affected.forEach(k=>{
-   const q=nodeMap[k];
-   q.rot=(q.rot+q.sign+4)%4;
- });
- moves++;document.getElementById('moves').textContent=moves;
- render();evaluate();
+function log(s){logEl.innerHTML+="> "+s+"<br>";logEl.scrollTop=logEl.scrollHeight}
+function make(){
+ pos=[];target=[];over=false;attempts=4;time=35;
+ for(let i=0;i<4;i++){pos.push(Math.floor(Math.random()*6));target.push(2+Math.floor(Math.random()*2))}
+ render(); logEl.innerHTML="";log("CORE INITIALIZED");log("FOUR CYLINDERS DETECTED");tick();
 }
 function render(){
- nodes.forEach(n=>{
-   n.el.querySelector('.plate').style.transform=`rotate(${n.rot*90}deg)`;
-   const active=isPowered(n.id);
-   n.el.classList.toggle('active',active);
- });
- drawDrives();
-}
-function drawDrives(){
- svg.innerHTML='';
- links.forEach(([a,b])=>{
-   const A=nodeMap[a],B=nodeMap[b];
-   const x1=A.x*10,y1=A.y/100*480,x2=B.x*10,y2=B.y/100*480;
-   const l=document.createElementNS('http://www.w3.org/2000/svg','line');
-   l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('class','drive');
-   svg.appendChild(l);
- });
- // source and lock rails
- [['src',6,50,22,50],['lock',86,67,95,50]].forEach(v=>{
-   const l=document.createElementNS('http://www.w3.org/2000/svg','line');
-   l.setAttribute('x1',v[1]*10);l.setAttribute('y1',v[2]/100*480);l.setAttribute('x2',v[3]*10);l.setAttribute('y2',v[4]/100*480);l.setAttribute('class','track');
-   svg.appendChild(l);
- });
- // active electrical paths: simplified connection model based on actual contact compatibility
- links.forEach(([a,b])=>{
-   if(canConnect(nodeMap[a],nodeMap[b]) && isPowered(a) && isPowered(b)){
-     const A=nodeMap[a],B=nodeMap[b];
-     const l=document.createElementNS('http://www.w3.org/2000/svg','line');
-     l.setAttribute('x1',A.x*10);l.setAttribute('y1',A.y/100*480);l.setAttribute('x2',B.x*10);l.setAttribute('y2',B.y/100*480);l.setAttribute('class','track active');svg.appendChild(l);
-   }
- });
-}
-function canConnect(a,b){
- // A connection is live when the two facing sides both have contacts.
- const dx=b.x-a.x,dy=b.y-a.y;
- let sideA,sideB;
- if(Math.abs(dx)>Math.abs(dy)){sideA=dx>0?1:3;sideB=dx>0?3:1}
- else{sideA=dy>0?2:0;sideB=dy>0?0:2}
- return contactPoints(a).includes(sideA)&&contactPoints(b).includes(sideB);
-}
-function isPowered(id){
- // BFS from source. Source enters A from the left.
- const powered=new Set();
- const first=nodeMap.A;
- if(!contactPoints(first).includes(3))return id==='A'&&false;
- powered.add('A');
- let changed=true;
- while(changed){
-   changed=false;
-   links.forEach(([a,b])=>{
-     if(powered.has(a)&&canConnect(nodeMap[a],nodeMap[b])&&!powered.has(b)){powered.add(b);changed=true}
-     if(powered.has(b)&&canConnect(nodeMap[a],nodeMap[b])&&!powered.has(a)){powered.add(a);changed=true}
-   });
+ lockEl.innerHTML="";
+ for(let i=0;i<4;i++){
+  const t=document.createElement("div");t.className="tumbler";t.dataset.i=i;
+  const band=document.createElement("div");band.className="target";
+  const rail=document.createElement("div");rail.className="rail";
+  const pin=document.createElement("div");pin.className="pin";
+  pin.style.top=(16+pos[i]*13)+"%";
+  const num=document.createElement("div");num.className="num";num.textContent="CYLINDER "+(i+1);
+  t.append(band,rail,pin,num);t.onclick=()=>move(i);lockEl.appendChild(t);
  }
- return powered.has(id);
+ attemptEl.textContent=attempts?"● ".repeat(attempts).trim():"—";
 }
-function evaluate(){
- let c=nodes.filter(n=>isPowered(n.id)).length;
- document.getElementById('count').textContent=c+'/5';
- document.getElementById('sys').textContent=c===5?'SYSTEM: ONLINE':'SYSTEM: OFFLINE';
- if(c===5 && isPowered('F')){
-   won=true;document.getElementById('msg').textContent='POWER: 100% — ВСЕ УЗЛЫ ЗАПИТАНЫ. ЗАМОК РАЗБЛОКИРОВАН.';
- }else{
-   document.getElementById('msg').textContent='POWER: '+Math.round(c/5*100)+'% — найдите непрерывный путь от POWER до LOCK.';
- }
+function move(i){
+ if(over)return;
+ pos[i]=(pos[i]+1)%6;render();
+ const ok=pos.every((p,k)=>p>=2&&p<=3);
+ statusEl.textContent=ok?"ALL CYLINDERS ALIGNED — READY":"ADJUST CYLINDERS";
+ log("CYLINDER "+(i+1)+" ROTATED");
 }
-document.getElementById('reset').onclick=()=>location.reload();
-document.getElementById('hint').onclick=()=>document.getElementById('msg').textContent='Подсказка: сначала найдите положение A, в котором питание может войти слева. F не связан механически с остальными и вращается отдельно.';
-nodes.forEach(makeRotor);render();evaluate();
+function engage(){
+ if(over)return;
+ const ok=pos.every((p,k)=>p>=2&&p<=3);
+ if(ok)win(); else {attempts--;attemptEl.textContent=attempts?"● ".repeat(attempts).trim():"—";statusEl.textContent="OVERRIDE REJECTED";log("MISALIGNMENT / PENALTY");if(attempts<=0)lose()}
+}
+function win(){over=true;clearInterval(timer);title.textContent="ACCESS GRANTED";text.textContent="LOCK MECHANISM DISENGAGED. CONTAINER READY.";overlay.classList.add("on")}
+function lose(){over=true;clearInterval(timer);title.textContent="ACCESS DENIED";text.textContent="SECURITY LOCKOUT. MANUAL RESET REQUIRED.";overlay.classList.add("on")}
+function tick(){
+ clearInterval(timer);time=35;timeEl.textContent="00:35";
+ timer=setInterval(()=>{if(over)return;time--;timeEl.textContent="00:"+String(Math.max(0,time)).padStart(2,"0");if(time<=0)lose()},1000)
+}
+document.getElementById("open").onclick=engage;
+document.getElementById("reset").onclick=make;
+document.getElementById("again").onclick=()=>{overlay.classList.remove("on");make()};
+make();
+})();
 </script>
-</body></html>
+</body>
+</html>
